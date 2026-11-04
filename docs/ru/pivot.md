@@ -6,11 +6,11 @@
 **строками**, значения другого столбца — **столбцами**, а агрегация заполняет
 ячейки.
 
-![Сводная таблица](https://raw.githubusercontent.com/denisotree/tuitab/master/.github/assets/pivot.gif)
+![Сводная таблица](https://raw.githubusercontent.com/denisotree/qrow/master/.github/assets/pivot.gif)
 
 ## Как это работает
 
-В отличие от мастера в электронных таблицах, tuitab берёт раскладку сводной из
+В отличие от мастера в электронных таблицах, qrow берёт раскладку сводной из
 состояния таблицы:
 
 1. **Строки (индекс)** — столбцы, которые вы **закрепили** через `!`.
@@ -44,7 +44,7 @@ sum(revenue) / sum(units)      # средняя цена за единицу
 ## По шагам
 
 ```sh
-tuitab sales.csv     # столбцы: date, region, category, units, revenue
+qrow sales.csv     # столбцы: date, region, category, units, revenue
 ```
 
 1. Встаньте на `region` и закрепите его через `!` — это станет индексом строк.

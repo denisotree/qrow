@@ -18,7 +18,7 @@ Type "clear"
 Enter
 Show
 
-Type "tuitab inventory.sqlite"
+Type "qrow inventory.sqlite"
 Enter
 Sleep 2200ms
 

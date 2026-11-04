@@ -7,24 +7,24 @@
 The quickest route is Cargo:
 
 ```sh
-cargo install tuitab
+cargo install qrow
 ```
 
-This installs three identical commands — `tuitab` and the shorter aliases `ttab`
-and `ttb`. `cargo binstall tuitab` skips the build and fetches the pre-built
-`tuitab` from the release, without the aliases. Other options (Homebrew, AUR,
+This installs two identical commands — `qrow` and its short alias `qrw`.
+`cargo binstall qrow` skips the build and fetches the pre-built `qrow` from the
+release, without the alias. Other options (Homebrew, AUR,
 Debian, pre-built binaries) are in the
-[main README](https://github.com/denisotree/tuitab/blob/master/README.md#installation).
+[main README](https://github.com/denisotree/qrow/blob/master/README.md#installation).
 
 ## Open a file
 
 Pass any supported file as the first argument:
 
 ```sh
-tuitab data.csv
-tuitab report.parquet
-tuitab books.xlsx
-tuitab app.db
+qrow data.csv
+qrow report.parquet
+qrow books.xlsx
+qrow app.db
 ```
 
 | Format | Extensions | Notes |
@@ -41,7 +41,7 @@ tuitab app.db
 | SQLite | `.sqlite`, `.sqlite3`, `.db`, or any name | Tables open as a table list; recognised by the file header, so `.aup3`, `.gnucash` or no extension at all work too |
 | DuckDB | `.duckdb`, `.ddb`, `.db`, or any name | Which engine a file is comes from its own header, not its name |
 
-For workbooks and databases, tuitab first shows an overview (sheets or tables);
+For workbooks and databases, qrow first shows an overview (sheets or tables);
 press `Enter` on a row to open it, `Esc` / `q` to go back. Tables can be edited
 and saved back — see [Databases](database.md).
 
@@ -70,7 +70,7 @@ three quarters of the budget, reading stops there too. Either way the title says
 `[first … of …]`, and saving onto the file itself is refused, because it would
 drop the rest.
 
-![A TOML file edited in place and saved as YAML](https://raw.githubusercontent.com/denisotree/tuitab/master/.github/assets/tree.gif)
+![A TOML file edited in place and saved as YAML](https://raw.githubusercontent.com/denisotree/qrow/master/.github/assets/tree.gif)
 
 ### Force a format
 
@@ -78,8 +78,8 @@ drop the rest.
 For a file it overrides both the extension and the contents:
 
 ```sh
-tuitab -t yaml deploy.conf     # a YAML file that is not called .yaml
-tuitab -t csv export.dat       # a CSV file under a name nothing recognises
+qrow -t yaml deploy.conf     # a YAML file that is not called .yaml
+qrow -t csv export.dat       # a CSV file under a name nothing recognises
 ```
 
 An unknown extension is decided by the contents, so `deploy.conf` usually opens
@@ -89,10 +89,10 @@ whatever it is called — `-t sqlite` is not needed.
 ### Open a database that does not exist yet
 
 ```sh
-tuitab inventory.sqlite        # nothing there — a blank sheet opens
+qrow inventory.sqlite        # nothing there — a blank sheet opens
 ```
 
-Add columns, give them types, add rows, `Ctrl+S`, and tuitab writes a real typed
+Add columns, give them types, add rows, `Ctrl+S`, and qrow writes a real typed
 table. See [Databases](database.md).
 
 ### Override the delimiter
@@ -100,7 +100,7 @@ table. See [Databases](database.md).
 When auto-detection guesses wrong (or you have a `;`-separated file):
 
 ```sh
-tuitab data.csv -d ';'
+qrow data.csv -d ';'
 ```
 
 ### Missing values in a CSV
@@ -114,11 +114,11 @@ takes `null_values` for anything else.
 
 ## Browse several files
 
-Pass more than one path and tuitab opens a **file list** instead of a single
+Pass more than one path and qrow opens a **file list** instead of a single
 table:
 
 ```sh
-tuitab orders.csv customers.csv products.parquet
+qrow orders.csv customers.csv products.parquet
 ```
 
 Each file becomes a row showing its name, size, and modified time. `Enter` opens
@@ -126,12 +126,12 @@ the highlighted file; `Esc` / `q` returns to the list.
 
 ## Read many files as one table
 
-A quoted glob pattern reaches tuitab instead of the shell, and every file it
+A quoted glob pattern reaches qrow instead of the shell, and every file it
 matches is read as one table:
 
 ```sh
-tuitab 'data/*.csv'
-tuitab 'content/**/index.md'
+qrow 'data/*.csv'
+qrow 'content/**/index.md'
 ```
 
 The quotes are the whole difference. Unquoted, the shell expands the pattern into
@@ -149,11 +149,11 @@ where to write rather than offering a name with a `*` in it.
 
 ## Browse a directory
 
-Point tuitab at a folder (or run it with no arguments to use the current one):
+Point qrow at a folder (or run it with no arguments to use the current one):
 
 ```sh
-tuitab ./reports/
-tuitab               # current directory
+qrow ./reports/
+qrow               # current directory
 ```
 
 You get a navigable file browser — open files with `Enter`, step back out with
@@ -161,18 +161,18 @@ You get a navigable file browser — open files with `Enter`, step back out with
 
 ## Read from a pipe
 
-tuitab reads from stdin when data is piped in. Tell it the format with `-t`:
+qrow reads from stdin when data is piped in. Tell it the format with `-t`:
 
 ```sh
-cat data.csv | tuitab -t csv
-psql -c "SELECT * FROM orders" --csv | tuitab -t csv
-echo '[{"id":1,"name":"Alice"}]'   | tuitab -t json
+cat data.csv | qrow -t csv
+psql -c "SELECT * FROM orders" --csv | qrow -t csv
+echo '[{"id":1,"name":"Alice"}]'   | qrow -t json
 ```
 
 Stdin understands `csv`, `tsv`, `txt`, `json`, `jsonl`/`ndjson`, `yaml`/`yml`
 and `toml`. (`txt` is treated as CSV.) To read Parquet, Arrow, Excel, Markdown,
 SQLite, or DuckDB, open the file by path instead of piping it. `-` works as an
-explicit stdin path: `cat data.csv | tuitab -t csv -`.
+explicit stdin path: `cat data.csv | qrow -t csv -`.
 
 ## The screen
 
@@ -199,5 +199,5 @@ explicit stdin path: `cat data.csv | tuitab -t csv -`.
 - Try [charts](charts.md), [pivot tables](pivot.md), and [JOINs](join.md).
 - Edit a table and write it back with [Databases](database.md).
 - Let an assistant compute over your files with the [MCP server](mcp.md)
-  (`tuitab --mcp`).
+  (`qrow --mcp`).
 - Browse task-oriented [recipes](recipes.md).

@@ -15,7 +15,7 @@ Type "clear"
 Enter
 Show
 
-Type "tuitab .github/assets/data/sales.csv"
+Type "qrow .github/assets/data/sales.csv"
 Enter
 Sleep 2000ms
 

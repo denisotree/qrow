@@ -7,23 +7,23 @@
 Самый быстрый способ — через Cargo:
 
 ```sh
-cargo install tuitab
+cargo install qrow
 ```
 
-Устанавливаются три одинаковые команды — `tuitab` и более короткие псевдонимы
-`ttab` и `ttb`. `cargo binstall tuitab` обходится без сборки и берёт готовый
-`tuitab` из релиза, без псевдонимов. Остальные способы (Homebrew, AUR, Debian,
-готовые сборки) описаны в [основном README](https://github.com/denisotree/tuitab/blob/master/README.md#installation).
+Устанавливаются две одинаковые команды — `qrow` и короткий псевдоним `qrw`.
+`cargo binstall qrow` обходится без сборки и берёт готовый `qrow` из релиза,
+без псевдонима. Остальные способы (Homebrew, AUR, Debian,
+готовые сборки) описаны в [основном README](https://github.com/denisotree/qrow/blob/master/README.md#installation).
 
 ## Открыть файл
 
 Передайте поддерживаемый файл первым аргументом:
 
 ```sh
-tuitab data.csv
-tuitab report.parquet
-tuitab books.xlsx
-tuitab app.db
+qrow data.csv
+qrow report.parquet
+qrow books.xlsx
+qrow app.db
 ```
 
 | Формат | Расширения | Примечания |
@@ -40,7 +40,7 @@ tuitab app.db
 | SQLite | `.sqlite`, `.sqlite3`, `.db` или любое имя | Таблицы открываются списком таблиц; база узнаётся по заголовку файла, так что `.aup3`, `.gnucash` и файл без расширения тоже открываются |
 | DuckDB | `.duckdb`, `.ddb`, `.db` или любое имя | Какой это движок, решает заголовок самого файла, а не его имя |
 
-Для книг и баз данных tuitab сначала показывает обзор (листы или таблицы);
+Для книг и баз данных qrow сначала показывает обзор (листы или таблицы);
 нажмите `Enter` на строке, чтобы открыть её, и `Esc` / `q`, чтобы вернуться.
 Таблицу можно править и сохранить обратно — см. [Базы данных](database.md).
 
@@ -70,7 +70,7 @@ MCP-сервер читает JSONL так же. Сохранение запис
 `[first … of …]`, а сохранение поверх самого файла запрещено — оно бы выбросило
 остальное.
 
-![TOML-файл, отредактированный на месте и сохранённый как YAML](https://raw.githubusercontent.com/denisotree/tuitab/master/.github/assets/tree.gif)
+![TOML-файл, отредактированный на месте и сохранённый как YAML](https://raw.githubusercontent.com/denisotree/qrow/master/.github/assets/tree.gif)
 
 ### Задать формат принудительно
 
@@ -78,8 +78,8 @@ MCP-сервер читает JSONL так же. Сохранение запис
 Для файла он перекрывает и расширение, и содержимое:
 
 ```sh
-tuitab -t yaml deploy.conf     # YAML-файл, который называется не .yaml
-tuitab -t csv export.dat       # CSV под именем, которое ничего не говорит
+qrow -t yaml deploy.conf     # YAML-файл, который называется не .yaml
+qrow -t csv export.dat       # CSV под именем, которое ничего не говорит
 ```
 
 Неизвестное расширение определяется по содержимому, так что `deploy.conf`
@@ -89,10 +89,10 @@ tuitab -t csv export.dat       # CSV под именем, которое нич�
 ### Открыть базу, которой ещё нет
 
 ```sh
-tuitab inventory.sqlite        # файла нет — открывается пустой лист
+qrow inventory.sqlite        # файла нет — открывается пустой лист
 ```
 
-Добавьте столбцы, задайте им типы, добавьте строки, `Ctrl+S` — и tuitab запишет
+Добавьте столбцы, задайте им типы, добавьте строки, `Ctrl+S` — и qrow запишет
 настоящую типизированную таблицу. См. [Базы данных](database.md).
 
 ### Задать разделитель
@@ -100,7 +100,7 @@ tuitab inventory.sqlite        # файла нет — открывается п
 Когда автоопределение ошибается (или файл разделён `;`):
 
 ```sh
-tuitab data.csv -d ';'
+qrow data.csv -d ';'
 ```
 
 ### Пропуски в CSV
@@ -114,11 +114,11 @@ tuitab data.csv -d ';'
 
 ## Просмотр нескольких файлов
 
-Передайте больше одного пути — и tuitab откроет **список файлов** вместо одной
+Передайте больше одного пути — и qrow откроет **список файлов** вместо одной
 таблицы:
 
 ```sh
-tuitab orders.csv customers.csv products.parquet
+qrow orders.csv customers.csv products.parquet
 ```
 
 Каждый файл становится строкой с именем, размером и временем изменения. `Enter`
@@ -126,12 +126,12 @@ tuitab orders.csv customers.csv products.parquet
 
 ## Много файлов как одна таблица
 
-Шаблон в кавычках достаётся tuitab, а не шеллу, и все файлы, которые он назвал,
+Шаблон в кавычках достаётся qrow, а не шеллу, и все файлы, которые он назвал,
 читаются как одна таблица:
 
 ```sh
-tuitab 'data/*.csv'
-tuitab 'content/**/index.md'
+qrow 'data/*.csv'
+qrow 'content/**/index.md'
 ```
 
 Кавычки — и есть вся разница. Без них шелл раскроет шаблон в несколько аргументов,
@@ -149,11 +149,11 @@ tuitab 'content/**/index.md'
 
 ## Просмотр каталога
 
-Укажите tuitab папку (или запустите без аргументов, чтобы взять текущую):
+Укажите qrow папку (или запустите без аргументов, чтобы взять текущую):
 
 ```sh
-tuitab ./reports/
-tuitab               # текущий каталог
+qrow ./reports/
+qrow               # текущий каталог
 ```
 
 Откроется навигатор по файлам — открывайте файлы по `Enter`, выходите назад по
@@ -161,19 +161,19 @@ tuitab               # текущий каталог
 
 ## Чтение из конвейера
 
-tuitab читает stdin, когда данные передаются по конвейеру. Укажите формат через
+qrow читает stdin, когда данные передаются по конвейеру. Укажите формат через
 `-t`:
 
 ```sh
-cat data.csv | tuitab -t csv
-psql -c "SELECT * FROM orders" --csv | tuitab -t csv
-echo '[{"id":1,"name":"Alice"}]'   | tuitab -t json
+cat data.csv | qrow -t csv
+psql -c "SELECT * FROM orders" --csv | qrow -t csv
+echo '[{"id":1,"name":"Alice"}]'   | qrow -t json
 ```
 
 Из stdin понимаются `csv`, `tsv`, `txt`, `json`, `jsonl`/`ndjson`, `yaml`/`yml`
 и `toml` (`txt` обрабатывается как CSV). Чтобы прочитать Parquet, Arrow, Excel,
 Markdown, SQLite или DuckDB, открывайте файл по пути, а не через конвейер. `-`
-работает как явный путь-stdin: `cat data.csv | tuitab -t csv -`.
+работает как явный путь-stdin: `cat data.csv | qrow -t csv -`.
 
 ## Экран
 
@@ -200,5 +200,5 @@ Markdown, SQLite или DuckDB, открывайте файл по пути, а 
 - Попробуйте [графики](charts.md), [сводные таблицы](pivot.md) и [JOIN](join.md).
 - Отредактируйте таблицу и запишите её обратно — [Базы данных](database.md).
 - Дайте ассистенту считать по вашим файлам через [MCP-сервер](mcp.md)
-  (`tuitab --mcp`).
+  (`qrow --mcp`).
 - Загляните в практические [рецепты](recipes.md).

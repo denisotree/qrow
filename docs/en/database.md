@@ -2,18 +2,18 @@
 
 > 🇷🇺 [Эта страница на русском](../ru/database.md) · [← Documentation index](README.md)
 
-SQLite and DuckDB are the two formats tuitab does not merely read. A table
-opened from one can be edited and written back into the same file — and tuitab
+SQLite and DuckDB are the two formats qrow does not merely read. A table
+opened from one can be edited and written back into the same file — and qrow
 shows every statement it is about to run before a single one of them does.
 
-![Editing a table and saving it back](https://raw.githubusercontent.com/denisotree/tuitab/master/.github/assets/database.gif)
+![Editing a table and saving it back](https://raw.githubusercontent.com/denisotree/qrow/master/.github/assets/database.gif)
 
 ## Open a table
 
 ```sh
-tuitab shop.sqlite
-tuitab warehouse.duckdb
-tuitab app.db           # which engine it is comes from the file's own header
+qrow shop.sqlite
+qrow warehouse.duckdb
+qrow app.db           # which engine it is comes from the file's own header
 ```
 
 The first screen is the database's own contents — every table and view, with its
@@ -28,9 +28,9 @@ a different file instead.`
 ### DuckDB 1.x and 2.x files
 
 DuckDB 2.0 changed its file format, and DuckDB 1.x cannot open a file in the new
-one. tuitab reads and edits both, and a file stays in the format it was made
+one. qrow reads and edits both, and a file stays in the format it was made
 with — editing a 1.x file never turns it into one 1.x can no longer open. A new
-`.duckdb` that tuitab creates is in the 1.x format, so any DuckDB opens it.
+`.duckdb` that qrow creates is in the 1.x format, so any DuckDB opens it.
 
 ## Edit
 
@@ -83,7 +83,7 @@ to a different file instead.
 
 ### Saving somewhere else
 
-Point `Ctrl+S` at a different `.db` and tuitab copies the **whole database**
+Point `Ctrl+S` at a different `.db` and qrow copies the **whole database**
 first — every table, index, view and trigger — then applies your changes to the
 copy. The original is left exactly as it was. The destination has to be a file
 that does not exist yet; an existing one is refused with `… already exists.
@@ -99,11 +99,11 @@ result next to the data it came from.
 
 ## Build a database from nothing
 
-Point tuitab at a database file that does not exist and it opens a blank sheet —
+Point qrow at a database file that does not exist and it opens a blank sheet —
 the title reads `inventory.sqlite [new]`:
 
 ```sh
-tuitab inventory.sqlite
+qrow inventory.sqlite
 ```
 
 1. `zi` inserts a column and asks for its name; repeat for the rest.

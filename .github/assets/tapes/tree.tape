@@ -17,7 +17,7 @@ Type "clear"
 Enter
 Show
 
-Type "tuitab config.toml"
+Type "qrow config.toml"
 Enter
 Sleep 2200ms
 

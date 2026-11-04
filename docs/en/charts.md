@@ -5,7 +5,7 @@
 Press `V` on any column to draw a chart. What you get depends on the column's
 type and whether you've **pinned** a reference column with `!`.
 
-![Charts — histogram and grouped bar](https://raw.githubusercontent.com/denisotree/tuitab/master/.github/assets/charts.gif)
+![Charts — histogram and grouped bar](https://raw.githubusercontent.com/denisotree/qrow/master/.github/assets/charts.gif)
 
 ## Chart types
 
@@ -49,7 +49,7 @@ labels are.
 ## Examples
 
 ```sh
-tuitab sales.csv     # columns: date, region, category, units, revenue
+qrow sales.csv     # columns: date, region, category, units, revenue
 ```
 
 - **Distribution of revenue** — move to `revenue`, press `V`. A histogram with

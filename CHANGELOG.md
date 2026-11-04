@@ -7,6 +7,37 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Breaking
+
+tuitab is now **qrow**. The program is the same; its name, commands and addresses change.
+
+- The crate is `qrow` and the commands are `qrow` and its short alias `qrw`. `tuitab`,
+  `ttab` and `ttb` are gone, with no transition period (`ttab` also collided with
+  mklement0/ttab, a macOS tool). The `aliases` feature now builds `qrw`;
+  `cargo binstall qrow` installs `qrow` alone.
+- The MCP server reports itself as `qrow`, and its tools are `qrow_inspect`,
+  `qrow_query`, `qrow_describe`, `qrow_jq`, `qrow_calc`, `qrow_write` and
+  `qrow_write_apply`. Re-register it — `claude mcp remove -s user tuitab && claude mcp
+  add -s user qrow -- qrow --mcp`, adding `--mcp-write` if you had it — and change
+  permission rules from `mcp__tuitab__tuitab_*` to `mcp__qrow__qrow_*`.
+- The repository is [denisotree/qrow](https://github.com/denisotree/qrow) and the site
+  [qrow.dev](https://qrow.dev). [denisotree/tuitab](https://github.com/denisotree/tuitab)
+  stays as the archive of 0.11.1 and earlier.
+- APT moves to `https://qrow.dev/apt` with the key `qrow.gpg`; the old repository stays
+  at 0.11.1. Replace the source list once —
+  `sudo rm /etc/apt/sources.list.d/tuitab.list /usr/share/keyrings/tuitab.gpg`, then
+  the commands in the README — and `apt install qrow` removes `tuitab`.
+- Homebrew moves an installed `tuitab` to `qrow` on `brew upgrade`; on the AUR, `qrow`
+  and `qrow-bin` replace `tuitab` and `tuitab-bin`. The `tuitab` crate's last version
+  only says where it went.
+
+### Fixed
+
+- The MCP descriptions of the write tools no longer carry runs of spaces.
+- The MCP guide said the server offers four tools, or six with `--mcp-write`; it offers
+  five, or seven.
+- SECURITY.md said qrow has no server component; it describes the MCP server now.
+
 ## [0.11.1] - 2026-11-04
 
 ### Notice
@@ -1490,7 +1521,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Non-English keyboard remapping
 - Three binary aliases: `tuitab`, `ttab`, `tt`
 
-[Unreleased]: https://github.com/denisotree/tuitab/compare/v0.11.1...HEAD
+[Unreleased]: https://github.com/denisotree/qrow/compare/v0.11.1...HEAD
 [0.11.1]: https://github.com/denisotree/tuitab/compare/v0.11.0...v0.11.1
 [0.11.0]: https://github.com/denisotree/tuitab/compare/v0.10.3...v0.11.0
 [0.10.3]: https://github.com/denisotree/tuitab/compare/v0.10.2...v0.10.3

@@ -1,48 +1,35 @@
-# tuitab
+# qrow
 
 <div align="center">
 
-[![CI](https://github.com/denisotree/tuitab/actions/workflows/ci.yml/badge.svg)](https://github.com/denisotree/tuitab/actions/workflows/ci.yml)
-[![crates.io](https://img.shields.io/crates/v/tuitab.svg)](https://crates.io/crates/tuitab)
-[![docs.rs](https://img.shields.io/docsrs/tuitab)](https://docs.rs/tuitab)
-[![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](https://github.com/denisotree/tuitab/blob/master/LICENSE)
+[![CI](https://github.com/denisotree/qrow/actions/workflows/ci.yml/badge.svg)](https://github.com/denisotree/qrow/actions/workflows/ci.yml)
+[![crates.io](https://img.shields.io/crates/v/qrow.svg)](https://crates.io/crates/qrow)
+[![docs.rs](https://img.shields.io/docsrs/qrow)](https://docs.rs/qrow)
+[![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](https://github.com/denisotree/qrow/blob/master/LICENSE)
 
-**A fast, keyboard-driven terminal explorer for tabular data.**
+**Query rows in tables, documents and databases — from the terminal or through an AI assistant.**
 
 Open **CSV · JSON · YAML · TOML · Parquet · Excel · SQLite · DuckDB** straight from your shell —
 filter, sort, pivot, join, compute columns, and chart distributions without
 leaving the terminal.
 
-![tuitab demo — open, sort, chart, describe](https://raw.githubusercontent.com/denisotree/tuitab/master/.github/assets/demo.gif)
+![qrow demo — open, sort, chart, describe](https://raw.githubusercontent.com/denisotree/qrow/master/.github/assets/demo.gif)
 
 </div>
 
-> **tuitab becomes qrow in the next release, 0.12.0.** 0.11.1 is the last release
-> under this name. In 0.12.0:
->
-> - the commands are `qrow` and its short alias `qrw`; `tuitab`, `ttab` and `ttb` go away;
-> - the MCP server is named `qrow` and its tools `qrow_inspect`, `qrow_query`,
->   `qrow_describe`, `qrow_jq`, `qrow_calc`, `qrow_write` and `qrow_write_apply` — an
->   MCP client's config and tool permissions need the new names;
-> - the repository moves to [denisotree/qrow](https://github.com/denisotree/qrow) and the
->   crate to `qrow` on crates.io;
-> - Homebrew moves an installed `tuitab` to `qrow` on upgrade, and on the AUR `qrow` and
->   `qrow-bin` replace `tuitab` and `tuitab-bin`;
-> - the APT repository moves to `https://qrow.dev/apt`. The old address stops answering,
->   so `apt update` warns about it; the installed `tuitab` keeps working. Replace the
->   source list once, as the 0.12.0 notes and [qrow.dev](https://qrow.dev) describe, and
->   `apt install qrow` removes `tuitab`.
+> **qrow was called tuitab until 0.12.0.** Coming from it? See
+> [Coming from tuitab](#coming-from-tuitab).
 
 ```sh
-tuitab data.csv                   # open a file
-tuitab config.toml                # JSON / YAML / TOML open as a browsable tree
-tuitab deploy.conf                # unknown extension? the contents decide
-tuitab -t yaml weird.dat          # or force a format outright
-tuitab orders.csv customers.csv   # browse several files as a list
-cat data.csv | tuitab -t csv      # read from a pipe
+qrow data.csv                   # open a file
+qrow config.toml                # JSON / YAML / TOML open as a browsable tree
+qrow deploy.conf                # unknown extension? the contents decide
+qrow -t yaml weird.dat          # or force a format outright
+qrow orders.csv customers.csv   # browse several files as a list
+cat data.csv | qrow -t csv      # read from a pipe
 ```
 
-> **New to tuitab?** Jump to the [Quick start](#quick-start), or read the full
+> **New to qrow?** Jump to the [Quick start](#quick-start), or read the full
 > [**Documentation**](#documentation) — available in **English** and **Русский**.
 
 ---
@@ -72,15 +59,15 @@ cat data.csv | tuitab -t csv      # read from a pipe
   lag/lead, share of a group) from an expression language with `and` / `or` / `not`.
 - **Clean, fast, type-aware** — Polars-backed engine, Everforest theme, undo/redo,
   currency / percentage / date column types.
-- **Build a database from nothing** — `tuitab inventory.sqlite` on a file that does not
+- **Build a database from nothing** — `qrow inventory.sqlite` on a file that does not
   exist opens a blank sheet. Add columns (`zi`), give them types (`t`), add rows (`o`,
-  or `O` for a form that checks each value against its column type), `Ctrl+S`. tuitab
+  or `O` for a form that checks each value against its column type), `Ctrl+S`. qrow
   asks what to call the table and writes a real
   typed one: an Integer column is declared `INTEGER` and stores integers, NULL stays
   NULL. SQLite and DuckDB both.
 - **Edit a database table and save it back** — open a SQLite or DuckDB table, edit
   cells, delete or paste rows, add/drop/rename columns, then `Ctrl+S` onto the same
-  file. tuitab shows every `ALTER TABLE`/`UPDATE`/`INSERT`/`DELETE` it is about to run
+  file. qrow shows every `ALTER TABLE`/`UPDATE`/`INSERT`/`DELETE` it is about to run
   and waits for confirmation, then runs them in one transaction; the rest of the
   database — other tables, indexes, views, triggers — is untouched. Reordering columns
   (and changing a type on SQLite) rebuilds the table, which the popup says out loud
@@ -93,7 +80,7 @@ cat data.csv | tuitab -t csv      # read from a pipe
   different extension: open `config.toml`, save as `config.yaml`. Markdown is read
   only — a page comes in as a row, and nothing writes one back out. Yank rows to the
   clipboard as TSV, CSV, JSON, or Markdown.
-- **MCP server** — `tuitab --mcp` exposes the same engine to an AI assistant, so it
+- **MCP server** — `qrow --mcp` exposes the same engine to an AI assistant, so it
   computes over your data instead of guessing at it. It reads databases properly:
   tables *and* views, with each column's declared SQL type, keys and defaults.
   Add `--mcp-write` and it can change things too — rows in a table, a table
@@ -113,14 +100,14 @@ Press `V` on any column. Numeric columns get a Freedman–Diaconis histogram;
 categorical columns get a frequency bar chart. [Pin](#keybindings) a date or
 category column first with `!` to draw line charts and grouped bars.
 
-![Charts](https://raw.githubusercontent.com/denisotree/tuitab/master/.github/assets/charts.gif)
+![Charts](https://raw.githubusercontent.com/denisotree/qrow/master/.github/assets/charts.gif)
 
 ### Pivot tables
 
 Pin the column(s) to group by, place the cursor on the column to spread across,
 press `W`, and type an aggregation formula such as `sum(revenue)`.
 
-![Pivot](https://raw.githubusercontent.com/denisotree/tuitab/master/.github/assets/pivot.gif)
+![Pivot](https://raw.githubusercontent.com/denisotree/qrow/master/.github/assets/pivot.gif)
 
 ### JOIN across files
 
@@ -129,14 +116,14 @@ choose `INNER` / `LEFT` / `RIGHT` / `OUTER` / `ANTI` / `SEMI`, and select the ke
 columns. `DIFF` compares two tables like `git diff`: unchanged, changed (with the
 differing cells marked), removed and added rows, each in its own colour.
 
-![JOIN](https://raw.githubusercontent.com/denisotree/tuitab/master/.github/assets/join.gif)
+![JOIN](https://raw.githubusercontent.com/denisotree/qrow/master/.github/assets/join.gif)
 
 ### Computed columns
 
 Press `=` and type an expression. Arithmetic, string and date functions, and
 conditionals are all supported — the new column appears right next to the cursor.
 
-![Computed columns](https://raw.githubusercontent.com/denisotree/tuitab/master/.github/assets/compute.gif)
+![Computed columns](https://raw.githubusercontent.com/denisotree/qrow/master/.github/assets/compute.gif)
 
 ### Editing a database table
 
@@ -144,7 +131,7 @@ Open a SQLite or DuckDB table, edit it, and `Ctrl+S` back onto the same file.
 Every `UPDATE`, `INSERT`, `DELETE` and `ALTER TABLE` is shown before anything
 runs, and the whole list goes in one transaction.
 
-![Editing a database table](https://raw.githubusercontent.com/denisotree/tuitab/master/.github/assets/database.gif)
+![Editing a database table](https://raw.githubusercontent.com/denisotree/qrow/master/.github/assets/database.gif)
 
 ### The new-row form
 
@@ -152,14 +139,14 @@ runs, and the whole list goes in one transaction.
 and checked as you type. A value the column cannot hold is refused with the
 reason instead of quietly turning the column into text.
 
-![The new-row form](https://raw.githubusercontent.com/denisotree/tuitab/master/.github/assets/rowform.gif)
+![The new-row form](https://raw.githubusercontent.com/denisotree/qrow/master/.github/assets/rowform.gif)
 
 ### JSON, YAML and TOML as a document
 
 `Enter` dives into a nested object or list, edits write back into the document
 rather than a flattened copy, and converting is just a different extension.
 
-![Structured formats as a tree](https://raw.githubusercontent.com/denisotree/tuitab/master/.github/assets/tree.gif)
+![Structured formats as a tree](https://raw.githubusercontent.com/denisotree/qrow/master/.github/assets/tree.gif)
 
 ---
 
@@ -168,52 +155,52 @@ rather than a flattened copy, and converting is just a different extension.
 ### Cargo (crates.io)
 
 ```sh
-cargo install tuitab
+cargo install qrow
 ```
 
-Installs three commands: `tuitab`, plus the shorter aliases `ttab` and `ttb`.
+Installs two commands: `qrow` and its short alias `qrw`.
 
 To skip the build, [cargo-binstall](https://github.com/cargo-bins/cargo-binstall)
-fetches the pre-built binary from the release instead — `tuitab` only, without the
-aliases:
+fetches the pre-built binary from the release instead — `qrow` only, without the
+alias:
 
 ```sh
-cargo binstall tuitab
+cargo binstall qrow
 ```
 
 ### Homebrew (macOS / Linux)
 
 ```sh
-brew tap denisotree/tuitab
-brew install tuitab
+brew tap denisotree/qrow
+brew install qrow
 ```
 
 ### Arch Linux (AUR)
 
 ```sh
-yay -S tuitab          # pre-built binary: tuitab-bin
+yay -S qrow            # pre-built binary: qrow-bin
 # or build from source:
-git clone https://aur.archlinux.org/tuitab.git && cd tuitab && makepkg -si
+git clone https://aur.archlinux.org/qrow.git && cd qrow && makepkg -si
 ```
 
 ### Debian / Ubuntu (APT)
 
 ```sh
-curl -fsSL https://denisotree.github.io/tuitab/apt/tuitab.gpg \
-  | sudo tee /usr/share/keyrings/tuitab.gpg > /dev/null
-echo "deb [signed-by=/usr/share/keyrings/tuitab.gpg] https://denisotree.github.io/tuitab/apt stable main" \
-  | sudo tee /etc/apt/sources.list.d/tuitab.list
-sudo apt update && sudo apt install tuitab
+curl -fsSL https://qrow.dev/apt/qrow.gpg \
+  | sudo tee /usr/share/keyrings/qrow.gpg > /dev/null
+echo "deb [signed-by=/usr/share/keyrings/qrow.gpg] https://qrow.dev/apt stable main" \
+  | sudo tee /etc/apt/sources.list.d/qrow.list
+sudo apt update && sudo apt install qrow
 ```
 
 `apt upgrade` then picks up new releases. amd64 and arm64; Debian 12+ and Ubuntu
 22.04+. A single `.deb` is also attached to every
-[release](https://github.com/denisotree/tuitab/releases): `sudo apt install ./tuitab_*.deb`.
+[release](https://github.com/denisotree/qrow/releases): `sudo apt install ./qrow_*.deb`.
 
 ### Pre-built binaries
 
 Grab a tarball for your platform (Linux / macOS, x86_64 / aarch64) from the
-[Releases page](https://github.com/denisotree/tuitab/releases).
+[Releases page](https://github.com/denisotree/qrow/releases).
 
 <details>
 <summary><b>Building from source</b></summary>
@@ -238,7 +225,7 @@ cargo build --release --no-default-features --features aliases
 | Feature | Default | Description |
 |---------|:-------:|-------------|
 | `bundled-duckdb` | ✓ | Compile DuckDB from source; no system `libduckdb` needed |
-| `aliases` | ✓ | Build the `ttab` and `ttb` aliases |
+| `aliases` | ✓ | Build the `qrw` alias |
 
 </details>
 
@@ -247,8 +234,8 @@ cargo build --release --no-default-features --features aliases
 ## Quick start
 
 ```sh
-cargo install tuitab
-tuitab data.csv
+cargo install qrow
+qrow data.csv
 ```
 
 - Move with `h` `j` `k` `l`; jump with `gg` / `G`.
@@ -265,7 +252,7 @@ tuitab data.csv
 ## Usage
 
 ```text
-tuitab [OPTIONS] [FILES]...
+qrow [OPTIONS] [FILES]...
 
 Arguments:
   [FILES]...  One or more files to open, a directory, a quoted glob pattern,
@@ -291,7 +278,7 @@ Options:
 ### Browse several files
 
 ```sh
-tuitab orders.csv customers.csv products.parquet
+qrow orders.csv customers.csv products.parquet
 ```
 
 A directory-style listing opens with each file as a row. Press `Enter` to open
@@ -300,11 +287,11 @@ one; `Esc` or `q` to go back.
 ### Many files as one table
 
 ```sh
-tuitab 'data/*.csv'
-tuitab 'content/**/index.md'
+qrow 'data/*.csv'
+qrow 'content/**/index.md'
 ```
 
-Quoted, the pattern reaches tuitab and every file it matches is stacked into one
+Quoted, the pattern reaches qrow and every file it matches is stacked into one
 table — the listing above is for picking a file, this is for reading them together.
 Unquoted, the shell expands it first and you get the listing instead. Tabular files
 have to hold the same columns, and the one that does not is named rather than
@@ -315,8 +302,8 @@ arrives NULL. A pattern is not a file, so the sheet has nothing to reload from a
 ### Pipe mode
 
 ```sh
-psql -c "SELECT * FROM orders" --csv | tuitab -t csv
-sqlite3 app.db ".mode csv" ".headers on" "SELECT * FROM users" | tuitab -t csv
+psql -c "SELECT * FROM orders" --csv | qrow -t csv
+sqlite3 app.db ".mode csv" ".headers on" "SELECT * FROM users" | qrow -t csv
 ```
 
 > Stdin accepts `csv`, `tsv`, `txt`, `json`, `jsonl`, `yaml`, and `toml`. For
@@ -324,34 +311,34 @@ sqlite3 app.db ".mode csv" ".headers on" "SELECT * FROM users" | tuitab -t csv
 
 ### MCP server — let an AI assistant use the engine
 
-`tuitab --mcp` speaks the [Model Context Protocol](https://modelcontextprotocol.io)
+`qrow --mcp` speaks the [Model Context Protocol](https://modelcontextprotocol.io)
 over stdio. An assistant handed a data file can then compute over it with
-tuitab instead of doing the arithmetic in its head:
+qrow instead of doing the arithmetic in its head:
 
 ```sh
-claude mcp add tuitab -- tuitab --mcp
+claude mcp add qrow -- qrow --mcp
 ```
 
 A source may be a glob — `content/**/index.md` reads every page of a static site as
 one table, each page a row of its frontmatter — so a site can be checked against a
 database in one call rather than through an export script.
 
-Five tools: `tuitab_inspect` (columns, types, row count, sample rows),
-`tuitab_query` (seventeen operations composed as a pipeline — filter, group by,
+Five tools: `qrow_inspect` (columns, types, row count, sample rows),
+`qrow_query` (seventeen operations composed as a pipeline — filter, group by,
 window functions, pivot, join, dedup and the rest — returning JSON or writing
-xlsx/csv/parquet/sqlite), `tuitab_describe` (per-column statistics),
-`tuitab_jq` (jq programs over nested JSON/YAML/TOML), and `tuitab_calc` — any
+xlsx/csv/parquet/sqlite), `qrow_describe` (per-column statistics),
+`qrow_jq` (jq programs over nested JSON/YAML/TOML), and `qrow_calc` — any
 calculation, file or no file, in 28-digit decimals with math, statistics and
 finance functions, each value labelled exact, rounded or approximate. Several questions can share
 one call, and one of them failing does not cost the answers beside it.
 
-Two more appear with `--mcp-write`: `tuitab_write` works out what a change would
+Two more appear with `--mcp-write`: `qrow_write` works out what a change would
 do and answers with the exact SQL, the rows it would touch and a plan id —
-writing nothing — and `tuitab_write_apply` runs precisely that plan, in one
+writing nothing — and `qrow_write_apply` runs precisely that plan, in one
 transaction, refusing if the table moved underneath it.
 
 There is no SQL and no arbitrary code: the model sends structured operations,
-each mapping onto a function tuitab already had, and gets back numbers Polars
+each mapping onto a function qrow already had, and gets back numbers Polars
 computed. The server documents itself — the tool list and usage notes are sent
 to the model on connect.
 
@@ -360,16 +347,16 @@ holds the two surfaces together: adding an action to the terminal fails to
 compile until someone says how a model reaches it.
 
 The protocol is newline-delimited JSON-RPC, which `serde_json` already covers;
-`tuitab_calc` adds `rust_decimal` for exact arithmetic and `libm` for the normal
+`qrow_calc` adds `rust_decimal` for exact arithmetic and `libm` for the normal
 distribution, and implements the other distributions itself.
 
-Full details in the [MCP server guide](https://github.com/denisotree/tuitab/blob/master/docs/en/mcp.md).
+Full details in the [MCP server guide](https://github.com/denisotree/qrow/blob/master/docs/en/mcp.md).
 
 ---
 
 ## Keybindings
 
-The essentials — see the [full keybinding reference](https://github.com/denisotree/tuitab/blob/master/docs/en/keybindings.md)
+The essentials — see the [full keybinding reference](https://github.com/denisotree/qrow/blob/master/docs/en/keybindings.md)
 for every command (column ops, clipboard, dedup, and more).
 
 | Key | Action | Key | Action |
@@ -396,38 +383,76 @@ for every command (column ops, clipboard, dedup, and more).
 
 ---
 
+## Coming from tuitab
+
+qrow is tuitab under a new name, from version 0.12.0. The commands `tuitab`, `ttab`
+and `ttb` are now `qrow` and `qrw`; the MCP server is `qrow` and its tools are
+`qrow_inspect`, `qrow_query`, `qrow_describe`, `qrow_jq`, `qrow_calc`, `qrow_write` and
+`qrow_write_apply`. The old repository,
+[denisotree/tuitab](https://github.com/denisotree/tuitab), stays as the archive of
+0.11.1 and earlier.
+
+- **Cargo:** `cargo uninstall tuitab && cargo install qrow`.
+- **Homebrew:** `brew update && brew upgrade` replaces tuitab with qrow by itself.
+  Optionally, to rename the tap on your machine as well:
+  `brew untap denisotree/tuitab && brew tap denisotree/qrow`.
+- **AUR:** install `qrow` or `qrow-bin`; pacman offers to replace `tuitab` or
+  `tuitab-bin`.
+- **APT:** the old repository stays at 0.11.1 and gets no updates. Remove it, add the
+  new one as in [Debian / Ubuntu (APT)](#debian--ubuntu-apt), and `apt install qrow`
+  removes `tuitab`:
+
+  ```sh
+  sudo rm /etc/apt/sources.list.d/tuitab.list /usr/share/keyrings/tuitab.gpg
+  ```
+- **MCP in Claude Code:** register the server under its new name, keeping
+  `--mcp-write` if you had it:
+
+  ```sh
+  claude mcp remove -s user tuitab
+  claude mcp add -s user qrow -- qrow --mcp
+  ```
+
+  Permission rules follow the server's name: `mcp__tuitab__tuitab_*` becomes
+  `mcp__qrow__qrow_*`.
+- **MCP clients configured with JSON** (Claude Desktop, Cursor, Zed and others): rename
+  the key and the `command` to `qrow`, with the full path if you used one —
+  `/opt/homebrew/bin/qrow` after a Homebrew upgrade, since `/opt/homebrew/bin/tuitab` is
+  gone. The client derives tool names from the key: a key left as `tuitab` gives
+  `mcp__tuitab__qrow_*`.
+
 ## Documentation
 
 Full guides, organised by topic, in two languages:
 
 | 🇬🇧 English | 🇷🇺 Русский |
 |------------|------------|
-| [Documentation index](https://github.com/denisotree/tuitab/blob/master/docs/en/README.md) | [Оглавление документации](https://github.com/denisotree/tuitab/blob/master/docs/ru/README.md) |
-| [Getting started](https://github.com/denisotree/tuitab/blob/master/docs/en/getting-started.md) | [Начало работы](https://github.com/denisotree/tuitab/blob/master/docs/ru/getting-started.md) |
-| [Keybindings](https://github.com/denisotree/tuitab/blob/master/docs/en/keybindings.md) | [Горячие клавиши](https://github.com/denisotree/tuitab/blob/master/docs/ru/keybindings.md) |
-| [Expressions](https://github.com/denisotree/tuitab/blob/master/docs/en/expressions.md) | [Выражения](https://github.com/denisotree/tuitab/blob/master/docs/ru/expressions.md) |
-| [Charts](https://github.com/denisotree/tuitab/blob/master/docs/en/charts.md) | [Графики](https://github.com/denisotree/tuitab/blob/master/docs/ru/charts.md) |
-| [JOIN](https://github.com/denisotree/tuitab/blob/master/docs/en/join.md) | [JOIN](https://github.com/denisotree/tuitab/blob/master/docs/ru/join.md) |
-| [Pivot tables](https://github.com/denisotree/tuitab/blob/master/docs/en/pivot.md) | [Сводные таблицы](https://github.com/denisotree/tuitab/blob/master/docs/ru/pivot.md) |
-| [Databases](https://github.com/denisotree/tuitab/blob/master/docs/en/database.md) | [Базы данных](https://github.com/denisotree/tuitab/blob/master/docs/ru/database.md) |
-| [MCP server](https://github.com/denisotree/tuitab/blob/master/docs/en/mcp.md) | [MCP-сервер](https://github.com/denisotree/tuitab/blob/master/docs/ru/mcp.md) |
-| [Recipes](https://github.com/denisotree/tuitab/blob/master/docs/en/recipes.md) | [Рецепты](https://github.com/denisotree/tuitab/blob/master/docs/ru/recipes.md) |
+| [Documentation index](https://github.com/denisotree/qrow/blob/master/docs/en/README.md) | [Оглавление документации](https://github.com/denisotree/qrow/blob/master/docs/ru/README.md) |
+| [Getting started](https://github.com/denisotree/qrow/blob/master/docs/en/getting-started.md) | [Начало работы](https://github.com/denisotree/qrow/blob/master/docs/ru/getting-started.md) |
+| [Keybindings](https://github.com/denisotree/qrow/blob/master/docs/en/keybindings.md) | [Горячие клавиши](https://github.com/denisotree/qrow/blob/master/docs/ru/keybindings.md) |
+| [Expressions](https://github.com/denisotree/qrow/blob/master/docs/en/expressions.md) | [Выражения](https://github.com/denisotree/qrow/blob/master/docs/ru/expressions.md) |
+| [Charts](https://github.com/denisotree/qrow/blob/master/docs/en/charts.md) | [Графики](https://github.com/denisotree/qrow/blob/master/docs/ru/charts.md) |
+| [JOIN](https://github.com/denisotree/qrow/blob/master/docs/en/join.md) | [JOIN](https://github.com/denisotree/qrow/blob/master/docs/ru/join.md) |
+| [Pivot tables](https://github.com/denisotree/qrow/blob/master/docs/en/pivot.md) | [Сводные таблицы](https://github.com/denisotree/qrow/blob/master/docs/ru/pivot.md) |
+| [Databases](https://github.com/denisotree/qrow/blob/master/docs/en/database.md) | [Базы данных](https://github.com/denisotree/qrow/blob/master/docs/ru/database.md) |
+| [MCP server](https://github.com/denisotree/qrow/blob/master/docs/en/mcp.md) | [MCP-сервер](https://github.com/denisotree/qrow/blob/master/docs/ru/mcp.md) |
+| [Recipes](https://github.com/denisotree/qrow/blob/master/docs/en/recipes.md) | [Рецепты](https://github.com/denisotree/qrow/blob/master/docs/ru/recipes.md) |
 
 ---
 
 ## Acknowledgements
 
-tuitab is inspired by [VisiData](https://www.visidata.org) — a brilliant terminal
+qrow is inspired by [VisiData](https://www.visidata.org) — a brilliant terminal
 spreadsheet multitool by [Saul Pwanson](https://github.com/saulpw). If you find
-tuitab useful, check out VisiData too. Built with
+qrow useful, check out VisiData too. Built with
 [ratatui](https://github.com/ratatui/ratatui), [Polars](https://www.pola.rs),
 and [crossterm](https://github.com/crossterm-rs/crossterm).
 
 ## Contributing
 
 Bug reports, feature requests, and pull requests are welcome.
-See [CONTRIBUTING.md](https://github.com/denisotree/tuitab/blob/master/CONTRIBUTING.md).
+See [CONTRIBUTING.md](https://github.com/denisotree/qrow/blob/master/CONTRIBUTING.md).
 
 ## License
 
-Apache-2.0 — see [LICENSE](https://github.com/denisotree/tuitab/blob/master/LICENSE).
+Apache-2.0 — see [LICENSE](https://github.com/denisotree/qrow/blob/master/LICENSE).
