@@ -227,7 +227,7 @@ fn a_null_looks_different_from_an_empty_string_on_screen() {
 #[test]
 fn a_null_copied_from_a_cell_pastes_back_as_a_null() {
     let saved = qrow::clipboard::paste_from_clipboard().ok();
-    if qrow::clipboard::copy_text("tuitab clipboard probe").is_err() {
+    if qrow::clipboard::copy_text("qrow clipboard probe").is_err() {
         eprintln!("no system clipboard here — skipping");
         return;
     }
@@ -625,7 +625,7 @@ fn a_blank_sheet_offers_its_own_path_when_saving() {
 }
 
 #[test]
-fn a_format_tuitab_cannot_write_is_still_an_error() {
+fn a_format_qrow_cannot_write_is_still_an_error() {
     let dir = missing("x.sqlite").parent().unwrap().to_path_buf();
     assert!(
         App::new_as(&dir.join("notes"), None, None).is_err(),

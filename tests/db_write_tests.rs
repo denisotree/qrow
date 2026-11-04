@@ -571,7 +571,7 @@ fn swapping_two_column_names_goes_through_a_scratch_name() {
     let plan = db_write::build_plan(&src, &df).unwrap();
     assert_eq!(plan.schema, 3, "{:?}", shown_sql(&plan));
     assert!(
-        shown_sql(&plan).iter().any(|s| s.contains("__tuitab_swap")),
+        shown_sql(&plan).iter().any(|s| s.contains("__qrow_swap")),
         "{:?}",
         shown_sql(&plan)
     );
@@ -610,7 +610,7 @@ fn reordering_columns_rebuilds_the_table_and_keeps_every_row() {
     assert!(plan.rebuild);
     let shown: Vec<&str> = plan.stmts.iter().map(|s| s.display.as_str()).collect();
     assert!(
-        shown[0].starts_with(r#"CREATE TABLE "users__tuitab_rebuild""#),
+        shown[0].starts_with(r#"CREATE TABLE "users__qrow_rebuild""#),
         "{:?}",
         shown
     );
@@ -1550,7 +1550,7 @@ fn a_similarly_named_column_does_not_trip_the_dependency_scan() {
 }
 
 /// The value-level drift check compares cells; a column appearing or vanishing behind
-/// tuitab's back needs its own look.
+/// qrow's back needs its own look.
 #[test]
 fn a_table_whose_columns_changed_underneath_is_refused() {
     let path = sqlite_fixture("shape-drift.sqlite");
@@ -2423,7 +2423,7 @@ fn a_plan_of_nothing_but_inserts_still_checks_the_table_it_was_built_against() {
 }
 
 #[test]
-fn the_drift_message_does_not_blame_tuitab() {
+fn the_drift_message_does_not_blame_qrow() {
     let path = sqlite_fixture("drift-wording.sqlite");
     let (mut df, src) = open_sqlite(&path);
     let name = df.column_index("name").unwrap();
@@ -2437,7 +2437,7 @@ fn the_drift_message_does_not_blame_tuitab() {
 
     let err = db_write::apply(&src, &plan).unwrap_err().to_string();
     assert!(err.contains("something else has written to it"), "{}", err);
-    assert!(!err.contains("tuitab"), "{}", err);
+    assert!(!err.contains("qrow"), "{}", err);
 }
 
 #[test]
@@ -2611,7 +2611,7 @@ fn a_save_waits_for_another_writer_instead_of_failing() {
 #[test]
 fn a_duckdb_file_held_by_another_process_says_so_plainly() {
     // The child gets the path from its parent: scratch() would delete the file.
-    if let Ok(held) = std::env::var("TUITAB_DUCK_LOCK_CHILD") {
+    if let Ok(held) = std::env::var("QROW_DUCK_LOCK_CHILD") {
         let _held = duckdb::Connection::open(&held).unwrap();
         let ready = PathBuf::from(format!("{}.ready", held));
         std::fs::write(&ready, b"").unwrap();
@@ -2637,7 +2637,7 @@ fn a_duckdb_file_held_by_another_process_says_so_plainly() {
             "a_duckdb_file_held_by_another_process_says_so_plainly",
             "--exact",
         ])
-        .env("TUITAB_DUCK_LOCK_CHILD", &path)
+        .env("QROW_DUCK_LOCK_CHILD", &path)
         .stdout(std::process::Stdio::null())
         .spawn()
         .unwrap();
@@ -2725,7 +2725,7 @@ fn storage_2x_file_stays_2x_after_an_edit_and_a_new_table() {
 #[test]
 fn storage_1x_file_with_a_pending_wal_is_read_whole() {
     // The child gets the path from its parent: scratch() would delete the file.
-    if let Ok(child_path) = std::env::var("TUITAB_DUCK_WAL_CHILD") {
+    if let Ok(child_path) = std::env::var("QROW_DUCK_WAL_CHILD") {
         let conn = open_duckdb_1x(Path::new(&child_path));
         conn.execute_batch(USERS_DDL).unwrap();
         conn.execute_batch(
@@ -2746,7 +2746,7 @@ fn storage_1x_file_with_a_pending_wal_is_read_whole() {
             "storage_1x_file_with_a_pending_wal_is_read_whole",
             "--exact",
         ])
-        .env("TUITAB_DUCK_WAL_CHILD", &path)
+        .env("QROW_DUCK_WAL_CHILD", &path)
         .stdout(std::process::Stdio::null())
         .status()
         .unwrap();
@@ -2755,7 +2755,7 @@ fn storage_1x_file_with_a_pending_wal_is_read_whole() {
 
     let (df, _) = load_duckdb_table_full(&path, "users").unwrap();
     assert_eq!(df.df.height(), 5);
-    // After the load, not before: tuitab's read-write open replays the WAL into the
+    // After the load, not before: qrow's read-write open replays the WAL into the
     // file, and only then is there one file for the read-only check to look at.
     assert_eq!(storage_tag(&path), "v1.0.0+");
     let _ = std::fs::remove_file(&path);

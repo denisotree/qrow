@@ -752,7 +752,7 @@ fn a_json_file_of_lines_stays_lines_only_when_saved_onto_itself() {
     );
 }
 
-/// `head logs.json | tuitab -t json` on JSON Lines content: the same check a `.json`
+/// `head logs.json | qrow -t json` on JSON Lines content: the same check a `.json`
 /// file gets, so it opens as rows rather than failing on "trailing characters".
 #[test]
 fn stdin_typed_json_holding_json_lines_opens_as_rows() {

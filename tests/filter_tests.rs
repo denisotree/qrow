@@ -294,7 +294,7 @@ fn present(col: &str) -> Predicate {
 
 /// `is_empty` compared the column against a null literal, and in three-valued
 /// logic `x == null` is null — never true. It matched nothing at all, on any
-/// file, because polars reads an empty CSV field as null and tuitab does not
+/// file, because polars reads an empty CSV field as null and qrow does not
 /// override that.
 #[test]
 fn is_empty_finds_the_blank_cells() {

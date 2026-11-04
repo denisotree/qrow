@@ -1,7 +1,7 @@
 //! Column names that look like regular expressions.
 //!
 //! Polars' `regex` feature makes `col("^…$")` select *every column matching the
-//! pattern* instead of the one column with that literal name.  tuitab passes
+//! pattern* instead of the one column with that literal name.  qrow passes
 //! user-supplied column names to `col()` from several places — the aggregator
 //! (`aggregator.rs`), frequency tables and pivots (`dataframe.rs`), and the MCP
 //! filter — so a file with such a header would misbehave across the TUI too,

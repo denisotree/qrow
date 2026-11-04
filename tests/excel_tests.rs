@@ -1,6 +1,6 @@
 //! What a spreadsheet's cells are once they are in a table.
 //!
-//! Every cell reaches tuitab as text, and a column left as text is one no aggregate
+//! Every cell reaches qrow as text, and a column left as text is one no aggregate
 //! will touch — `sum` over a money column used to answer "the column is string", which
 //! made an .xlsx source useless for the arithmetic the tool exists to do.
 
@@ -18,7 +18,7 @@ fn tmp(name: &str) -> PathBuf {
     path
 }
 
-/// Written through tuitab's own writer, which puts numbers in as numbers — the same
+/// Written through qrow's own writer, which puts numbers in as numbers — the same
 /// thing Excel does, and what the reader has to make sense of.
 fn round_trip(case: &str, csv: &str) -> qrow::data::dataframe::DataFrame {
     let src = tmp(&format!("{}.csv", case));
@@ -112,7 +112,7 @@ fn a_padded_number_stays_the_text_it_is() {
 #[test]
 fn a_date_cell_is_a_date_and_not_its_serial_number() {
     // A date in a spreadsheet is a number with a format on it. Read as the number, the
-    // 29th of January 2026 arrives as 46051 — which is what tuitab used to answer.
+    // 29th of January 2026 arrives as 46051 — which is what earlier versions answered.
     use rust_xlsxwriter::{ExcelDateTime, Format, Workbook};
     let path = tmp("dates.xlsx");
     let mut wb = Workbook::new();

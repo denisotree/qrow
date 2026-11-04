@@ -10,7 +10,7 @@ use std::time::Instant;
 fn measure_document_load() {
     let home = std::env::var("HOME").unwrap();
     for name in ["bench-50.json", "bench-200.json"] {
-        let path = Path::new(&home).join(".tmp/tuitab-bench").join(name);
+        let path = Path::new(&home).join(".tmp/qrow-bench").join(name);
         if !path.exists() {
             println!("{}: missing, skipped", name);
             continue;

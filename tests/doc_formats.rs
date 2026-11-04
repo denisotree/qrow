@@ -987,7 +987,7 @@ fn saving_an_edited_toml_config_over_itself_keeps_its_comments() {
     let path = out("commented.toml");
     std::fs::write(
         &path,
-        "# tuitab demo config\nname = \"demo\"  # display name\nport = 8080\n\n# database\n[db]\nhost = \"localhost\"\n",
+        "# qrow demo config\nname = \"demo\"  # display name\nport = 8080\n\n# database\n[db]\nhost = \"localhost\"\n",
     )
     .unwrap();
 
@@ -1010,7 +1010,7 @@ fn saving_an_edited_toml_config_over_itself_keeps_its_comments() {
 
     let text = std::fs::read_to_string(&path).unwrap();
     assert!(text.contains("port = 9090"), "the edit landed: {}", text);
-    assert!(text.contains("# tuitab demo config"), "{}", text);
+    assert!(text.contains("# qrow demo config"), "{}", text);
     assert!(text.contains("# display name"), "{}", text);
     assert!(text.contains("# database"), "{}", text);
 }
@@ -1888,7 +1888,7 @@ fn expanding_deep_nesting_keeps_cells_addressable() {
 /// with the app's own writer and reads it back, so a calamine upgrade cannot break
 /// Excel support silently.
 #[test]
-fn an_xlsx_written_by_tuitab_reads_back() {
+fn an_xlsx_written_by_qrow_reads_back() {
     let (df, _) = load_file_with_doc(&fixture("prices.csv"), None).unwrap();
     let path = out("roundtrip.xlsx");
     let _ = std::fs::remove_file(&path);
@@ -1902,7 +1902,7 @@ fn an_xlsx_written_by_tuitab_reads_back() {
 }
 
 #[test]
-fn an_arrow_file_written_by_tuitab_reads_back() {
+fn an_arrow_file_written_by_qrow_reads_back() {
     let (df, _) = load_file_with_doc(&fixture("prices.csv"), None).unwrap();
     let path = out("roundtrip.arrow");
     let _ = std::fs::remove_file(&path);

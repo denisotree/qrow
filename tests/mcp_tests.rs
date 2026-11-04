@@ -222,13 +222,13 @@ fn an_unknown_tool_is_a_protocol_error() {
     let response = send(
         &mut server,
         json!({"jsonrpc": "2.0", "id": 1, "method": "tools/call",
-               "params": {"name": "tuitab_nonesuch", "arguments": {}}}),
+               "params": {"name": "qrow_nonesuch", "arguments": {}}}),
     );
     assert_eq!(response["error"]["code"], -32602);
     assert!(response["error"]["message"]
         .as_str()
         .unwrap()
-        .contains("tuitab_nonesuch"));
+        .contains("qrow_nonesuch"));
 }
 
 // ── qrow_inspect ──────────────────────────────────────────────────────────
@@ -1993,7 +1993,7 @@ fn a_database_that_will_not_open_says_why_instead_of_holding_nothing() {
 /// a slow runner cannot let the parent in first.
 #[test]
 fn a_locked_database_says_so_and_names_the_file_once() {
-    if let Ok(held) = std::env::var("TUITAB_MCP_LOCK_CHILD") {
+    if let Ok(held) = std::env::var("QROW_MCP_LOCK_CHILD") {
         let _conn = duckdb::Connection::open(&held).unwrap();
         let ready = PathBuf::from(format!("{}.ready", held));
         std::fs::write(&ready, b"").unwrap();
@@ -2018,7 +2018,7 @@ fn a_locked_database_says_so_and_names_the_file_once() {
             "a_locked_database_says_so_and_names_the_file_once",
             "--exact",
         ])
-        .env("TUITAB_MCP_LOCK_CHILD", &path)
+        .env("QROW_MCP_LOCK_CHILD", &path)
         .stdout(std::process::Stdio::null())
         .spawn()
         .unwrap();

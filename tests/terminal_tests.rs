@@ -1,8 +1,8 @@
-//! Started without a terminal, tuitab says so and exits instead of panicking.
+//! Started without a terminal, qrow says so and exits instead of panicking.
 
 #[cfg(unix)]
 #[test]
-fn without_a_terminal_tuitab_exits_with_an_error_not_a_panic() {
+fn without_a_terminal_qrow_exits_with_an_error_not_a_panic() {
     use std::os::unix::process::CommandExt;
     use std::process::{Command, Stdio};
     use std::time::{Duration, Instant};
@@ -29,7 +29,7 @@ fn without_a_terminal_tuitab_exits_with_an_error_not_a_panic() {
         }
         if started.elapsed() > Duration::from_secs(30) {
             let _ = child.kill();
-            panic!("tuitab kept running without a terminal");
+            panic!("qrow kept running without a terminal");
         }
         std::thread::sleep(Duration::from_millis(50));
     };
@@ -38,7 +38,7 @@ fn without_a_terminal_tuitab_exits_with_an_error_not_a_panic() {
 
     assert!(!status.success());
     assert!(!stderr.contains("panicked"), "{}", stderr);
-    assert!(stderr.contains("needs a terminal"), "{}", stderr);
+    assert!(stderr.contains("qrow needs a terminal"), "{}", stderr);
 }
 
 /// The short name is the same program: the version names the product, the usage the

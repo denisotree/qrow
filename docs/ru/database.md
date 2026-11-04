@@ -81,7 +81,7 @@ NULL. Пустая строка остаётся пустой строкой.
 Пересборка воспроизводит имена столбцов, типы, `NOT NULL`, `DEFAULT` и первичный
 ключ из одного столбца. Всё, что она не смогла бы перенести без потерь — `CHECK`,
 `UNIQUE`, внешний ключ, collation, — это отказ, а не молчаливая потеря:
-`'orders' has to be rebuilt to do this, and tuitab will not rebuild it: …`.
+`'orders' has to be rebuilt to do this, and qrow will not rebuild it: …`.
 Сохраните в другой файл.
 
 ### Сохранение в другой файл

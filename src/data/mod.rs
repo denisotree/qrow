@@ -1,4 +1,4 @@
-//! Data model and I/O layer for tuitab.
+//! Data model and I/O layer for qrow.
 //!
 //! This module contains everything needed to load, store, and manipulate tabular data:
 //!

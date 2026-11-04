@@ -2,7 +2,7 @@
 //! copied out of a cell can be pasted into another one.
 //!
 //! This test talks to the real system clipboard — there is no other way to cover
-//! the bug it guards, which was tuitab closing its clipboard connection the moment
+//! the bug it guards, which was the program closing its clipboard connection the moment
 //! a copy finished, so the text was gone before anyone could paste it. On a machine
 //! with no clipboard at all (a headless CI runner) it skips rather than fails, and
 //! it puts back whatever the user had copied before it ran.
@@ -15,7 +15,7 @@ use keys::{key, open, press};
 #[test]
 fn a_copied_cell_can_be_pasted_into_another_cell() {
     let saved = qrow::clipboard::paste_from_clipboard().ok();
-    if qrow::clipboard::copy_text("tuitab clipboard probe").is_err() {
+    if qrow::clipboard::copy_text("qrow clipboard probe").is_err() {
         eprintln!("no system clipboard here — skipping");
         return;
     }

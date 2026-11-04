@@ -78,7 +78,7 @@ you confirm:
 A rebuild reproduces the column names, types, `NOT NULL`, `DEFAULT` and a
 single-column primary key. Anything it could not carry across intact — a `CHECK`,
 a `UNIQUE`, a foreign key, a collation — is a refusal rather than a silent loss:
-`'orders' has to be rebuilt to do this, and tuitab will not rebuild it: …`. Save
+`'orders' has to be rebuilt to do this, and qrow will not rebuild it: …`. Save
 to a different file instead.
 
 ### Saving somewhere else
