@@ -2,8 +2,8 @@
 //! on the sheet stack now shares, so the background loader cannot disagree with the
 //! foreground one about whether something is a database (#43).
 
+use qrow::data::io::open_target;
 use std::path::{Path, PathBuf};
-use tuitab::data::io::open_target;
 
 fn dir() -> PathBuf {
     let d = Path::new(env!("CARGO_MANIFEST_DIR"))
@@ -178,7 +178,7 @@ fn a_file_too_short_to_carry_a_header_is_not_a_database() {
 fn load_file_reads_a_database_without_an_extension_as_its_listing() {
     // The join picker and the file-list sheet load through here, not `open_target`.
     let path = sqlite_at("noext-direct");
-    let df = tuitab::data::io::load_file(&path, None).unwrap();
+    let df = qrow::data::io::load_file(&path, None).unwrap();
     assert_eq!(df.columns[0].name, "Table");
 }
 
@@ -193,14 +193,14 @@ fn table_names(path: &Path) -> Vec<String> {
 
 #[test]
 fn saving_over_an_existing_database_adds_a_table_instead_of_writing_csv() {
-    use tuitab::data::io::db_write::{kind_of_file, DbKind};
+    use qrow::data::io::db_write::{kind_of_file, DbKind};
     let path = sqlite_at("named.csv");
-    let df = tuitab::data::io::load_file(Path::new("test_data/sample.csv"), None).unwrap();
-    tuitab::data::io::save_file_as(
+    let df = qrow::data::io::load_file(Path::new("test_data/sample.csv"), None).unwrap();
+    qrow::data::io::save_file_as(
         &df,
         None,
         &path,
-        tuitab::data::io::doc_io::Shape::Records,
+        qrow::data::io::doc_io::Shape::Records,
         "added",
     )
     .unwrap();
@@ -216,16 +216,16 @@ fn saving_over_an_existing_database_adds_a_table_instead_of_writing_csv() {
 fn saving_to_a_new_path_without_an_extension_still_writes_csv() {
     let path = dir().join("new-out");
     let _ = std::fs::remove_file(&path);
-    let df = tuitab::data::io::load_file(Path::new("test_data/sample.csv"), None).unwrap();
-    tuitab::data::io::save_file_as(
+    let df = qrow::data::io::load_file(Path::new("test_data/sample.csv"), None).unwrap();
+    qrow::data::io::save_file_as(
         &df,
         None,
         &path,
-        tuitab::data::io::doc_io::Shape::Records,
+        qrow::data::io::doc_io::Shape::Records,
         "data",
     )
     .unwrap();
-    assert!(tuitab::data::io::db_write::kind_of_file(&path).is_none());
+    assert!(qrow::data::io::db_write::kind_of_file(&path).is_none());
     let written = std::fs::read_to_string(&path).unwrap();
     let sample = std::fs::read_to_string("test_data/sample.csv").unwrap();
     assert_eq!(written.lines().next(), sample.lines().next());
@@ -243,7 +243,7 @@ fn a_fifo_is_not_a_database_and_is_not_opened() {
     let (tx, rx) = std::sync::mpsc::channel();
     let path = fifo.clone();
     std::thread::spawn(move || {
-        let _ = tx.send(tuitab::data::io::db_write::is_db_path(&path));
+        let _ = tx.send(qrow::data::io::db_write::is_db_path(&path));
     });
     let answer = rx
         .recv_timeout(std::time::Duration::from_secs(10))
@@ -263,7 +263,7 @@ fn enter_in_a_directory_listing_opens_a_database_without_an_extension() {
         .execute_batch("CREATE TABLE users (id INTEGER); INSERT INTO users VALUES (1);")
         .unwrap();
 
-    let mut app = tuitab::app::App::new_as(&base, None, None).unwrap();
+    let mut app = qrow::app::App::new_as(&base, None, None).unwrap();
     app.open_directory_row(); // the only row is already under the cursor
     assert_eq!(
         app.stack.active().sqlite_db_path.as_deref(),
@@ -327,7 +327,7 @@ fn a_text_file_with_duck_at_offset_eight_is_not_a_database() {
     // Long enough for the header to be read and compared, with no extension to lean on.
     let path = dir().join("birds-noext");
     std::fs::write(&path, "animals,DUCK,goose\n1,2,3\n").unwrap();
-    assert!(tuitab::data::io::db_write::kind_of_file(&path).is_none());
+    assert!(qrow::data::io::db_write::kind_of_file(&path).is_none());
     let opened = open_target(&path, None, None).unwrap();
     let cols: Vec<&str> = opened.df.columns.iter().map(|c| c.name.as_str()).collect();
     assert_eq!(cols, vec!["animals", "DUCK", "goose"]);
@@ -340,7 +340,7 @@ mod keys;
 
 use crossterm::event::{KeyCode, KeyEvent, KeyEventKind, KeyModifiers};
 use keys::key;
-use tuitab::data::io::{open_target_from, Sample, Sampling};
+use qrow::data::io::{open_target_from, Sample, Sampling};
 
 /// Three records of eight bytes each.
 const LINES: &str = "{\"a\":1}\n{\"a\":2}\n{\"a\":3}\n";
@@ -412,9 +412,9 @@ fn a_json_file_holding_lines_is_sampled_too() {
     assert_eq!(opened.df.visible_row_count(), 2);
 }
 
-fn sampled_app(name: &str) -> (tuitab::app::App, PathBuf) {
+fn sampled_app(name: &str) -> (qrow::app::App, PathBuf) {
     let path = lines_at(name);
-    let mut app = tuitab::app::App::new_as(&path, None, None).unwrap();
+    let mut app = qrow::app::App::new_as(&path, None, None).unwrap();
     app.stack.active_mut().sample = Some(Sample {
         file: path.clone(),
         read: 16,
@@ -423,17 +423,17 @@ fn sampled_app(name: &str) -> (tuitab::app::App, PathBuf) {
     (app, path)
 }
 
-fn save_to(app: &mut tuitab::app::App, path: &Path) {
+fn save_to(app: &mut qrow::app::App, path: &Path) {
     let event = KeyEvent {
         code: KeyCode::Char('s'),
         modifiers: KeyModifiers::CONTROL,
         kind: KeyEventKind::Press,
         state: crossterm::event::KeyEventState::NONE,
     };
-    let action = tuitab::event::handle_key_event(event, app.mode, app.stack.can_pop());
+    let action = qrow::event::handle_key_event(event, app.mode, app.stack.can_pop());
     app.handle_action(action);
     app.save.input =
-        tuitab::ui::text_input::TextInput::with_value(path.to_string_lossy().into_owned());
+        qrow::ui::text_input::TextInput::with_value(path.to_string_lossy().into_owned());
     key(app, KeyCode::Enter);
 }
 
@@ -448,8 +448,8 @@ fn a_sample_is_never_saved_over_its_file() {
     // Nor is a table made from it.
     let (mut app, path) = sampled_app("guarded-freq.jsonl");
     // The frequency table defers one frame through the Calculating overlay.
-    app.handle_action(tuitab::types::Action::OpenFrequencyTable);
-    app.handle_action(tuitab::types::Action::OpenFrequencyTable);
+    app.handle_action(qrow::types::Action::OpenFrequencyTable);
+    app.handle_action(qrow::types::Action::OpenFrequencyTable);
     assert!(app.stack.can_pop(), "the frequency table is open");
     assert!(
         app.stack.active().sample.is_some(),
@@ -473,7 +473,7 @@ fn a_sample_is_never_saved_over_its_file() {
 fn a_sample_says_so_in_its_title() {
     let (mut app, _) = sampled_app("titled.jsonl");
     let mut terminal = ratatui::Terminal::new(ratatui::backend::TestBackend::new(100, 10)).unwrap();
-    terminal.draw(|f| tuitab::ui::render(f, &mut app)).unwrap();
+    terminal.draw(|f| qrow::ui::render(f, &mut app)).unwrap();
     let screen: String = terminal
         .backend()
         .buffer()
@@ -486,9 +486,9 @@ fn a_sample_says_so_in_its_title() {
 
 // ── JSON Lines is a table: read into columns, no tree kept ─────────────────────────
 
-use tuitab::data::io::{doc_io::Shape, save_file_as};
+use qrow::data::io::{doc_io::Shape, save_file_as};
 
-fn table_of(name: &str, text: &str, sampling: Sampling) -> tuitab::data::dataframe::DataFrame {
+fn table_of(name: &str, text: &str, sampling: Sampling) -> qrow::data::dataframe::DataFrame {
     let path = dir().join(name);
     std::fs::write(&path, text).unwrap();
     let opened = open_target_from(&path, None, None, sampling).unwrap();
@@ -496,11 +496,11 @@ fn table_of(name: &str, text: &str, sampling: Sampling) -> tuitab::data::datafra
     opened.df
 }
 
-fn cell(df: &tuitab::data::dataframe::DataFrame, row: usize, name: &str) -> String {
+fn cell(df: &qrow::data::dataframe::DataFrame, row: usize, name: &str) -> String {
     df.get_physical(row, df.column_index(name).unwrap())
 }
 
-fn is_json(df: &tuitab::data::dataframe::DataFrame, name: &str) -> bool {
+fn is_json(df: &qrow::data::dataframe::DataFrame, name: &str) -> bool {
     df.columns[df.column_index(name).unwrap()].json
 }
 
@@ -619,13 +619,13 @@ fn saving_a_table_as_jsonl_asks_no_shape() {
     let other = dir().join("shapeless-copy.jsonl");
     let _ = std::fs::remove_file(&other);
     save_to(&mut app, &other);
-    assert_ne!(app.mode, tuitab::types::AppMode::SaveShapeSelect);
+    assert_ne!(app.mode, qrow::types::AppMode::SaveShapeSelect);
     assert_eq!(std::fs::read_to_string(&other).unwrap(), LINES);
 }
 
 #[test]
 fn json_lines_text_is_a_table() {
-    let df = tuitab::data::io::jsonl_table("{\"a\":1}\n{\"a\":2}\n").unwrap();
+    let df = qrow::data::io::jsonl_table("{\"a\":1}\n{\"a\":2}\n").unwrap();
     assert_eq!(df.visible_row_count(), 2);
     assert_eq!(
         df.df.column("a").unwrap().dtype(),
@@ -703,7 +703,7 @@ fn a_jsonl_pattern_keeps_its_json_columns() {
         "{\"id\":2,\"geo\":{\"lat\":2},\"extra\":true}\n",
     )
     .unwrap();
-    let app = tuitab::app::App::new_as(&sub.join("*.jsonl"), None, None).unwrap();
+    let app = qrow::app::App::new_as(&sub.join("*.jsonl"), None, None).unwrap();
     let df = &app.stack.active().dataframe;
     assert!(is_json(df, "geo"));
     assert_eq!(df.visible_row_count(), 2);
@@ -737,17 +737,17 @@ fn a_jsonl_line_that_is_not_utf8_is_refused_by_line() {
 fn a_json_file_of_lines_stays_lines_only_when_saved_onto_itself() {
     let path = dir().join("own-lines.json");
     std::fs::write(&path, LINES).unwrap();
-    let mut app = tuitab::app::App::new_as(&path, None, None).unwrap();
+    let mut app = qrow::app::App::new_as(&path, None, None).unwrap();
     save_to(&mut app, &path);
     assert_eq!(std::fs::read_to_string(&path).unwrap(), LINES);
 
     let other = dir().join("other-lines.json");
     std::fs::write(&other, LINES).unwrap();
-    let mut app = tuitab::app::App::new_as(&path, None, None).unwrap();
+    let mut app = qrow::app::App::new_as(&path, None, None).unwrap();
     save_to(&mut app, &other);
     assert_eq!(
         app.mode,
-        tuitab::types::AppMode::SaveShapeSelect,
+        qrow::types::AppMode::SaveShapeSelect,
         "a new JSON asks its shape"
     );
 }
@@ -757,7 +757,7 @@ fn a_json_file_of_lines_stays_lines_only_when_saved_onto_itself() {
 #[test]
 fn stdin_typed_json_holding_json_lines_opens_as_rows() {
     let lines = b"{\"a\":1,\"b\":\"x\"}\n{\"a\":2,\"b\":\"y\"}\n".to_vec();
-    let (df, state) = tuitab::data::io::load_from_bytes(lines, "json", None).unwrap();
+    let (df, state) = qrow::data::io::load_from_bytes(lines, "json", None).unwrap();
     assert_eq!(df.df.height(), 2);
     assert!(state.is_none(), "JSON Lines is a table, not a tree");
 }

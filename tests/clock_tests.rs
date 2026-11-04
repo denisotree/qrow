@@ -1,8 +1,8 @@
 //! `now()` and `today()` against the clock — in a binary of their own, since the test
 //! sets the process's time zone.
 
+use qrow::mcp::{handle_message, Server};
 use serde_json::{json, Value};
-use tuitab::mcp::{handle_message, Server};
 
 /// Every datetime column is held in UTC, so the clock the expressions read is UTC too:
 /// off UTC, a local clock would compare an event from an hour ago as one to come.

@@ -4,10 +4,10 @@
 //! reachable through a pattern, and a pattern is only worth having if what it matches
 //! can be read.
 
+use qrow::app::App;
+use qrow::mcp::{handle_message, Server};
 use serde_json::{json, Value};
 use std::path::{Path, PathBuf};
-use tuitab::app::App;
-use tuitab::mcp::{handle_message, Server};
 
 fn dir() -> PathBuf {
     let dir = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
@@ -219,7 +219,7 @@ fn the_terminal_stacks_what_a_pattern_matches() {
     // the prefill falls back through the hint to the sheet title, and the title is the
     // pattern.  Without the hint this offers to create a file with a `*` in its name.
     let mut app = app;
-    app.handle_action(tuitab::types::Action::SaveFile);
+    app.handle_action(qrow::types::Action::SaveFile);
     let offered = app.save.input.as_str();
     assert!(
         !offered.contains('*'),

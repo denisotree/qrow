@@ -1,8 +1,8 @@
 use polars::prelude::NamedFrom;
+use qrow::data::dataframe::DataFrame;
+use qrow::data::loader::load_csv;
+use qrow::types::ColumnType;
 use std::path::Path;
-use tuitab::data::dataframe::DataFrame;
-use tuitab::data::loader::load_csv;
-use tuitab::types::ColumnType;
 
 fn sample_path() -> &'static Path {
     Path::new("test_data/sample.csv")
@@ -51,7 +51,7 @@ fn test_get_value() {
 #[test]
 fn test_currency_dirty_float_parsing() {
     use polars::prelude::Series;
-    use tuitab::data::column::ColumnMeta;
+    use qrow::data::column::ColumnMeta;
 
     let mut df = DataFrame::empty();
     let series = Series::new(
@@ -78,8 +78,8 @@ fn test_currency_dirty_float_parsing() {
 #[test]
 fn test_expression_after_rename() {
     use polars::prelude::Series;
-    use tuitab::data::column::ColumnMeta;
-    use tuitab::data::expression::Expr;
+    use qrow::data::column::ColumnMeta;
+    use qrow::data::expression::Expr;
 
     let mut df = DataFrame::empty();
     let s1 = Series::new("old_sum".into(), &[10.0, 20.0]);
@@ -127,7 +127,7 @@ fn identity_row_order_shares_one_allocation() {
 /// kept a second full copy of the file for nothing.
 #[test]
 fn only_toml_keeps_its_source_text() {
-    use tuitab::data::doc::{Doc, Format};
+    use qrow::data::doc::{Doc, Format};
     let jsonl = Doc::from_str("{\"a\":1}\n{\"a\":2}\n", Format::Jsonl).unwrap();
     assert!(jsonl.source_text.is_none());
     let json = Doc::from_str("{\"a\":1}", Format::Json).unwrap();
@@ -141,7 +141,7 @@ fn only_toml_keeps_its_source_text() {
 #[test]
 fn rows_pushed_at_the_end_take_the_types_of_the_table() {
     use polars::prelude::*;
-    let mut df = tuitab::data::dataframe::DataFrame::from_parts(
+    let mut df = qrow::data::dataframe::DataFrame::from_parts(
         df!("a" => [1i64, 2], "b" => [10i64, 20]).unwrap(),
         Vec::new(),
     );
@@ -175,7 +175,7 @@ fn rows_pushed_at_the_end_take_the_types_of_the_table() {
 /// A cell's line breaks fold to one space; the spaces a value holds stay as written.
 #[test]
 fn one_line_folds_only_breaks_and_tabs() {
-    use tuitab::data::dataframe::one_line;
+    use qrow::data::dataframe::one_line;
     assert_eq!(one_line("a  b"), "a  b");
     assert_eq!(one_line("{\r\n    \"a\": 1\n}"), "{ \"a\": 1 }");
     assert_eq!(one_line("x\ty"), "x y");

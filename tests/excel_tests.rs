@@ -4,9 +4,9 @@
 //! will touch — `sum` over a money column used to answer "the column is string", which
 //! made an .xlsx source useless for the arithmetic the tool exists to do.
 
+use qrow::data::io::{load_file, save_file_as};
+use qrow::types::ColumnType;
 use std::path::{Path, PathBuf};
-use tuitab::data::io::{load_file, save_file_as};
-use tuitab::types::ColumnType;
 
 fn tmp(name: &str) -> PathBuf {
     let dir = Path::new(env!("CARGO_MANIFEST_DIR"))
@@ -20,7 +20,7 @@ fn tmp(name: &str) -> PathBuf {
 
 /// Written through tuitab's own writer, which puts numbers in as numbers — the same
 /// thing Excel does, and what the reader has to make sense of.
-fn round_trip(case: &str, csv: &str) -> tuitab::data::dataframe::DataFrame {
+fn round_trip(case: &str, csv: &str) -> qrow::data::dataframe::DataFrame {
     let src = tmp(&format!("{}.csv", case));
     std::fs::write(&src, csv).unwrap();
     let df = load_file(&src, None).unwrap();
@@ -29,7 +29,7 @@ fn round_trip(case: &str, csv: &str) -> tuitab::data::dataframe::DataFrame {
         &df,
         None,
         &xlsx,
-        tuitab::data::io::doc_io::Shape::Records,
+        qrow::data::io::doc_io::Shape::Records,
         "Sheet1",
     )
     .unwrap();

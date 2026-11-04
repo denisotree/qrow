@@ -14,8 +14,8 @@ use keys::{key, open, press};
 
 #[test]
 fn a_copied_cell_can_be_pasted_into_another_cell() {
-    let saved = tuitab::clipboard::paste_from_clipboard().ok();
-    if tuitab::clipboard::copy_text("tuitab clipboard probe").is_err() {
+    let saved = qrow::clipboard::paste_from_clipboard().ok();
+    if qrow::clipboard::copy_text("tuitab clipboard probe").is_err() {
         eprintln!("no system clipboard here — skipping");
         return;
     }
@@ -26,7 +26,7 @@ fn a_copied_cell_can_be_pasted_into_another_cell() {
     app.stack.active_mut().table_state.select(Some(0));
     press(&mut app, "yc");
     assert_eq!(
-        tuitab::clipboard::paste_from_clipboard().unwrap(),
+        qrow::clipboard::paste_from_clipboard().unwrap(),
         "75000",
         "the clipboard must still hold the copied value after the copy returns"
     );
@@ -43,6 +43,6 @@ fn a_copied_cell_can_be_pasted_into_another_cell() {
     );
 
     if let Some(s) = saved {
-        let _ = tuitab::clipboard::copy_text(&s);
+        let _ = qrow::clipboard::copy_text(&s);
     }
 }

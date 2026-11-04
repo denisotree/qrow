@@ -1,11 +1,11 @@
 //! The median absolute deviation, and median and MAD as windows: the pieces of a
 //! robust z-score per group.
 
+use qrow::data::aggregator::AggregatorKind;
+use qrow::mcp::{handle_message, Server};
+use qrow::types::ColumnType;
 use serde_json::{json, Value};
 use std::path::PathBuf;
-use tuitab::data::aggregator::AggregatorKind;
-use tuitab::mcp::{handle_message, Server};
-use tuitab::types::ColumnType;
 
 fn csv(name: &str, text: &str) -> PathBuf {
     let dir = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
@@ -144,8 +144,8 @@ fn median_and_mad_windows_refuse_an_order() {
 /// numeric column is read — not as text, where 10 sorts before 9.
 #[test]
 fn footer_min_and_max_read_percentages_as_numbers() {
-    use tuitab::data::aggregator::AggregatorKind;
-    use tuitab::types::ColumnType;
+    use qrow::data::aggregator::AggregatorKind;
+    use qrow::types::ColumnType;
     // As text, "10" comes before "2".
     let values: Vec<String> = ["2", "10"].iter().map(|s| s.to_string()).collect();
     let min = AggregatorKind::Min.compute(&values, ColumnType::Percentage, 0, None);

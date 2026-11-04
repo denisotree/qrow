@@ -1,10 +1,10 @@
 //! Group-by and grand totals, and the parity between the two surfaces.
 
+use qrow::data::aggregator::AggregatorKind;
+use qrow::data::dataframe::DataFrame;
+use qrow::data::group::{group_by, total, AggSpec};
+use qrow::data::io::load_file;
 use std::path::Path;
-use tuitab::data::aggregator::AggregatorKind;
-use tuitab::data::dataframe::DataFrame;
-use tuitab::data::group::{group_by, total, AggSpec};
-use tuitab::data::io::load_file;
 
 fn sample() -> DataFrame {
     load_file(Path::new("test_data/sample.csv"), None).unwrap()
@@ -94,9 +94,9 @@ fn an_aggregate_the_column_cannot_carry_is_refused_by_name() {
 /// must land on the same table.
 #[test]
 fn the_gb_key_produces_the_same_table_as_the_shared_engine() {
-    use tuitab::types::Action;
+    use qrow::types::Action;
 
-    let mut app = tuitab::app::App::new_as(Path::new("test_data/sample.csv"), None, None).unwrap();
+    let mut app = qrow::app::App::new_as(Path::new("test_data/sample.csv"), None, None).unwrap();
     {
         let s = app.stack.active_mut();
         let department = s.dataframe.column_index("department").unwrap();
@@ -136,9 +136,9 @@ fn the_gb_key_produces_the_same_table_as_the_shared_engine() {
 
 #[test]
 fn grouping_without_pinned_columns_says_what_to_do() {
-    use tuitab::types::Action;
+    use qrow::types::Action;
 
-    let mut app = tuitab::app::App::new_as(Path::new("test_data/sample.csv"), None, None).unwrap();
+    let mut app = qrow::app::App::new_as(Path::new("test_data/sample.csv"), None, None).unwrap();
     app.handle_action(Action::OpenGroupBy);
     app.handle_action(Action::OpenGroupBy);
 
@@ -157,7 +157,7 @@ fn gaps() -> DataFrame {
 #[test]
 fn a_group_of_blank_cells_is_counted() {
     let df = gaps();
-    let out = tuitab::data::group::frequency(&df, &["team".to_string()], &[]).unwrap();
+    let out = qrow::data::group::frequency(&df, &["team".to_string()], &[]).unwrap();
 
     let team = out.column_index("team").unwrap();
     let count = out.column_index("Count").unwrap();
@@ -180,10 +180,10 @@ fn a_group_of_blank_cells_is_counted() {
 #[test]
 fn a_frequency_table_is_ordered_the_same_way_every_time() {
     let df = sample();
-    let first = tuitab::data::group::frequency(&df, &["department".to_string()], &[]).unwrap();
+    let first = qrow::data::group::frequency(&df, &["department".to_string()], &[]).unwrap();
 
     for _ in 0..8 {
-        let again = tuitab::data::group::frequency(&df, &["department".to_string()], &[]).unwrap();
+        let again = qrow::data::group::frequency(&df, &["department".to_string()], &[]).unwrap();
         for row in 0..first.visible_row_count() {
             assert_eq!(
                 DataFrame::anyvalue_to_string_fmt(&first.get_val(row, 0)),
@@ -208,7 +208,7 @@ fn a_frequency_table_is_ordered_the_same_way_every_time() {
 #[test]
 fn an_aggregate_over_the_grouping_column_is_not_dropped_in_silence() {
     let df = sample();
-    let out = tuitab::data::group::frequency(
+    let out = qrow::data::group::frequency(
         &df,
         &["department".to_string()],
         &[spec("department", AggregatorKind::Distinct)],

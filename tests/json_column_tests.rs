@@ -1,9 +1,9 @@
 //! JSON held in a text column: `json_get` in expressions, `expand_json` as an operation
 //! and on `zJ`.
 
+use qrow::mcp::{handle_message, Server};
 use serde_json::{json, Value};
 use std::path::{Path, PathBuf};
-use tuitab::mcp::{handle_message, Server};
 
 fn tmp(name: &str) -> PathBuf {
     let dir = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
@@ -182,8 +182,8 @@ fn expand_json_refuses_a_name_that_is_taken() {
 
 #[test]
 fn zj_expands_the_current_column() {
-    use tuitab::types::Action;
-    let mut app = tuitab::app::App::new_as(Path::new(&clients()), None, None).unwrap();
+    use qrow::types::Action;
+    let mut app = qrow::app::App::new_as(Path::new(&clients()), None, None).unwrap();
     let col = app.stack.active().dataframe.column_index("client").unwrap();
     app.stack.active_mut().cursor_col = col;
     app.handle_action(Action::ExpandJsonColumn);
@@ -203,11 +203,11 @@ fn zj_expands_the_current_column() {
 /// both read as 42 — and keeps a nested value as JSON that saves back as itself.
 #[test]
 fn expand_json_types_its_values_as_json_get_does() {
-    let df = tuitab::data::io::jsonl_table(
+    let df = qrow::data::io::jsonl_table(
         "{\"c\":\"{\\\"code\\\":\\\"42\\\",\\\"x\\\":null,\\\"o\\\":{\\\"a\\\":1}}\"}\n",
     )
     .unwrap();
-    let out = tuitab::data::json_cols::expand_json(&df, "c", "c_").unwrap();
+    let out = qrow::data::json_cols::expand_json(&df, "c", "c_").unwrap();
     let dtype = |n: &str| out.df.column(n).unwrap().dtype().clone();
     assert_eq!(dtype("c_code"), polars::prelude::DataType::Int64);
     assert_eq!(dtype("c_x"), polars::prelude::DataType::String);

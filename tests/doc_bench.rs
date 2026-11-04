@@ -18,7 +18,7 @@ fn measure_document_load() {
         let size = std::fs::metadata(&path).unwrap().len() as f64 / 1024.0 / 1024.0;
 
         let t = Instant::now();
-        let (df, doc) = tuitab::data::io::load_file_with_doc(&path, None).unwrap();
+        let (df, doc) = qrow::data::io::load_file_with_doc(&path, None).unwrap();
         let load = t.elapsed();
 
         let t = Instant::now();
@@ -29,8 +29,8 @@ fn measure_document_load() {
             .read()
             .unwrap()
             .to_string_as(
-                tuitab::data::doc::Format::Json,
-                &tuitab::data::doc::SaveOpts::default(),
+                qrow::data::doc::Format::Json,
+                &qrow::data::doc::SaveOpts::default(),
             )
             .unwrap();
         let save = t.elapsed();

@@ -5,9 +5,9 @@
 //! for a process.  One test at the end does spawn the binary, to check the
 //! framing and that nothing leaks onto stdout.
 
+use qrow::mcp::{handle_message, Server};
 use serde_json::{json, Value};
 use std::path::PathBuf;
-use tuitab::mcp::{handle_message, Server};
 
 fn tmp(name: &str) -> PathBuf {
     // Not the system temp dir: test output belongs to the project, under the
@@ -1157,7 +1157,7 @@ fn the_binary_speaks_the_protocol_over_stdio() {
     use std::io::Write;
     use std::process::{Command, Stdio};
 
-    let mut child = Command::new(env!("CARGO_BIN_EXE_tuitab"))
+    let mut child = Command::new(env!("CARGO_BIN_EXE_qrow"))
         .arg("--mcp")
         .current_dir(env!("CARGO_MANIFEST_DIR"))
         .stdin(Stdio::piped())
@@ -1841,7 +1841,7 @@ fn duckdb_writes_the_same_way() {
                "where": [{"col": "id", "op": "eq", "value": 1}]}),
     );
 
-    let (df, _) = tuitab::data::io::load_duckdb_table_full(&db, "users").unwrap();
+    let (df, _) = qrow::data::io::load_duckdb_table_full(&db, "users").unwrap();
     assert_eq!(df.get_physical(0, 1), "ANN");
     std::fs::remove_file(&db).unwrap();
 }
@@ -2563,13 +2563,12 @@ fn inspecting_a_spreadsheet_gives_the_size_of_every_sheet() {
     let mut server = Server::new();
     let xlsx = tmp("sizes.xlsx");
     let _ = std::fs::remove_file(&xlsx);
-    let df =
-        tuitab::data::io::load_file(std::path::Path::new("test_data/sample.csv"), None).unwrap();
-    tuitab::data::io::save_file_as(
+    let df = qrow::data::io::load_file(std::path::Path::new("test_data/sample.csv"), None).unwrap();
+    qrow::data::io::save_file_as(
         &df,
         None,
         &xlsx,
-        tuitab::data::io::doc_io::Shape::Records,
+        qrow::data::io::doc_io::Shape::Records,
         "Sheet1",
     )
     .unwrap();
@@ -2657,8 +2656,8 @@ fn query_output_into_an_existing_database_named_csv_adds_a_table() {
         res
     );
     assert_eq!(
-        tuitab::data::io::db_write::kind_of_file(&db),
-        Some(tuitab::data::io::db_write::DbKind::Sqlite),
+        qrow::data::io::db_write::kind_of_file(&db),
+        Some(qrow::data::io::db_write::DbKind::Sqlite),
         "the database was overwritten"
     );
     assert_eq!(sqlite_tables(&db), vec!["added", "users"]);
@@ -2777,7 +2776,7 @@ fn the_instructions_name_the_columns_group_by_makes() {
         .iter()
         .map(|c| c["name"].as_str().unwrap())
         .collect();
-    let instructions = tuitab::mcp::tools::instructions(false);
+    let instructions = qrow::mcp::tools::instructions(false);
     for name in &names[1..] {
         // `salary:sum` is the 'col:fn' pattern; anything else is named as it is.
         let written = if name.contains(':') { "col:fn" } else { name };

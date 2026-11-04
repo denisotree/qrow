@@ -1,8 +1,8 @@
 //! Tokens that mean "no value" in a CSV, and a source whose keys are checked.
 
+use qrow::mcp::{handle_message, Server};
 use serde_json::{json, Value};
 use std::path::PathBuf;
-use tuitab::mcp::{handle_message, Server};
 
 fn csv(name: &str, text: &str) -> PathBuf {
     let dir = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
@@ -140,7 +140,7 @@ fn a_count_over_a_column_with_tokens_counts_the_values() {
 #[test]
 fn csv_from_a_pipe_reads_null_tokens_as_a_file_does() {
     let (df, _) =
-        tuitab::data::io::load_from_bytes(b"v\n1\nundefined\n3\n".to_vec(), "csv", None).unwrap();
+        qrow::data::io::load_from_bytes(b"v\n1\nundefined\n3\n".to_vec(), "csv", None).unwrap();
     assert_eq!(
         df.df.column("v").unwrap().dtype(),
         &polars::prelude::DataType::Int64

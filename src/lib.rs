@@ -18,9 +18,12 @@ use clap::Parser;
 use color_eyre::Result;
 use std::path::PathBuf;
 
-/// TuiTab — Terminal tabular data explorer
+/// qrow — query rows in tables, documents and databases
 #[derive(Parser, Debug)]
-#[command(version, about)]
+#[command(
+    version,
+    about = "qrow — query rows in tables, documents and databases"
+)]
 pub struct Cli {
     /// One or more files to open. Pass multiple files to browse them as a list.
     /// Use '-' to read from stdin (pipe mode).

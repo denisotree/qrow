@@ -1,6 +1,6 @@
+use qrow::data::dataframe::DataFrame;
+use qrow::data::loader::load_csv;
 use std::path::Path;
-use tuitab::data::dataframe::DataFrame;
-use tuitab::data::loader::load_csv;
 
 fn load_sample() -> DataFrame {
     load_csv(Path::new("test_data/sample.csv"), None).expect("Failed to load sample.csv")

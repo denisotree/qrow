@@ -1,9 +1,9 @@
 //! Pipelines over files larger than memory: scanned and streamed rather than loaded.
 //! Every answer must be the one the in-memory path gives.
 
+use qrow::mcp::{handle_message, Server};
 use serde_json::{json, Value};
 use std::path::PathBuf;
-use tuitab::mcp::{handle_message, Server};
 
 fn dir() -> PathBuf {
     let dir = PathBuf::from(env!("CARGO_MANIFEST_DIR"))

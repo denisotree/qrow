@@ -14,8 +14,8 @@
 //! The mirror match over the server's `Op` does the same in the other
 //! direction.
 
-use tuitab::mcp::pipeline::Op;
-use tuitab::types::Action;
+use qrow::mcp::pipeline::Op;
+use qrow::types::Action;
 
 #[derive(Debug, PartialEq, Eq)]
 enum Parity {

@@ -1,8 +1,8 @@
 //! Aggregates over the rows a filter picks, side by side in one `group_by`.
 
+use qrow::mcp::{handle_message, Server};
 use serde_json::{json, Value};
 use std::path::PathBuf;
-use tuitab::mcp::{handle_message, Server};
 
 /// Written once: the tests read it in parallel, and a rewrite under a reader is an
 /// empty file.

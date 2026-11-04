@@ -1,3 +1,3 @@
 fn main() -> color_eyre::Result<()> {
-    tuitab::run()
+    qrow::run()
 }

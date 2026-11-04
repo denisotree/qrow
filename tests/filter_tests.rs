@@ -1,13 +1,13 @@
 //! Row selection shared by the TUI's typed expressions and the MCP server's
 //! structured predicates.
 
-use std::path::{Path, PathBuf};
-use tuitab::data::dataframe::DataFrame;
-use tuitab::data::expression::{Expr, Value};
-use tuitab::data::filter::{
+use qrow::data::dataframe::DataFrame;
+use qrow::data::expression::{Expr, Value};
+use qrow::data::filter::{
     matching_rows, select_rows, Clause, Fallback, Operand, PredOp, Predicate,
 };
-use tuitab::data::io::load_file;
+use qrow::data::io::load_file;
+use std::path::{Path, PathBuf};
 
 fn sample() -> DataFrame {
     load_file(Path::new("test_data/sample.csv"), None).unwrap()
@@ -400,7 +400,7 @@ fn a_date_column_can_be_filtered_by_an_iso_string() {
     let mut df = hires();
     let col = df.column_index("hire_date").unwrap();
     // What `t` does in the terminal.
-    df.set_column_type(col, tuitab::types::ColumnType::Date)
+    df.set_column_type(col, qrow::types::ColumnType::Date)
         .unwrap();
 
     let after = matching_rows(

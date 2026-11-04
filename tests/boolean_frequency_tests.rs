@@ -1,8 +1,8 @@
 //! Boolean columns typed as boolean, and frequency tables that count every row.
 
+use qrow::mcp::{handle_message, Server};
 use serde_json::{json, Value};
 use std::path::PathBuf;
-use tuitab::mcp::{handle_message, Server};
 
 fn file(name: &str, text: &str) -> PathBuf {
     let dir = PathBuf::from(env!("CARGO_MANIFEST_DIR"))

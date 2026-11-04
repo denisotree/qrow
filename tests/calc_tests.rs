@@ -1,7 +1,7 @@
 //! `tuitab_calc`: exact decimals, honest precision labels, named steps.
 
+use qrow::mcp::calc::run;
 use serde_json::{json, Value};
-use tuitab::mcp::calc::run;
 
 /// The value and precision of a single expression.
 fn calc(expr: &str) -> (String, String) {
@@ -212,9 +212,9 @@ fn mistakes_are_named() {
 
 #[test]
 fn the_server_runs_it() {
-    let mut server = tuitab::mcp::Server::default();
-    let call = |server: &mut tuitab::mcp::Server, message: Value| -> Value {
-        tuitab::mcp::handle_message(server, &message.to_string()).unwrap()
+    let mut server = qrow::mcp::Server::default();
+    let call = |server: &mut qrow::mcp::Server, message: Value| -> Value {
+        qrow::mcp::handle_message(server, &message.to_string()).unwrap()
     };
 
     let response = call(

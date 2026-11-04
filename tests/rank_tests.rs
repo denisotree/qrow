@@ -1,9 +1,9 @@
 //! Mann–Whitney U and two-sample Kolmogorov–Smirnov in `tuitab_calc`, held to
 //! scipy 1.18.1 — and samples that come from a query rather than typed in.
 
+use qrow::mcp::{handle_message, Server};
 use serde_json::{json, Value};
 use std::path::PathBuf;
-use tuitab::mcp::{handle_message, Server};
 
 const AB: (&str, &str) = (
     "[1.1, 2.3, 3.0, 4.8, 5.5]",

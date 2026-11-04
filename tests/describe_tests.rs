@@ -3,16 +3,16 @@
 //! The expected numbers are worked out from `test_data/sample.csv` by hand, so
 //! this fails if the arithmetic changes — not merely if the output changes shape.
 
+use qrow::data::describe::{describe, METRICS};
+use qrow::data::io::load_file;
 use std::path::PathBuf;
-use tuitab::data::describe::{describe, METRICS};
-use tuitab::data::io::load_file;
 
-fn sample() -> tuitab::data::dataframe::DataFrame {
+fn sample() -> qrow::data::dataframe::DataFrame {
     load_file(&PathBuf::from("test_data/sample.csv"), None).unwrap()
 }
 
 /// Look up one metric for one column of a describe result.
-fn metric(profile: &tuitab::data::dataframe::DataFrame, name: &str, column: &str) -> String {
+fn metric(profile: &qrow::data::dataframe::DataFrame, name: &str, column: &str) -> String {
     let row = METRICS
         .iter()
         .position(|m| *m == name)
@@ -87,7 +87,7 @@ fn mode_is_the_most_frequent_value() {
 /// `sample.csv` has neither, so this is the branch no other test reaches.
 #[test]
 fn currency_and_percentage_columns_are_numeric_and_use_their_precision() {
-    use tuitab::types::ColumnType;
+    use qrow::types::ColumnType;
 
     let mut df = sample();
     let salary = df.columns.iter().position(|c| c.name == "salary").unwrap();
@@ -127,9 +127,9 @@ fn the_profile_follows_row_order_rather_than_the_whole_frame() {
 // `describe` is reached from the TUI through one small piece of wiring in
 // `App`.  These drive the real action so the wiring cannot rot unnoticed.
 
-fn describe_via_the_ui(path: &str) -> tuitab::app::App {
-    let mut app = tuitab::app::App::new_as(&PathBuf::from(path), None, None).unwrap();
-    app.handle_action(tuitab::types::Action::DescribeSheet);
+fn describe_via_the_ui(path: &str) -> qrow::app::App {
+    let mut app = qrow::app::App::new_as(&PathBuf::from(path), None, None).unwrap();
+    app.handle_action(qrow::types::Action::DescribeSheet);
     app
 }
 
@@ -165,7 +165,7 @@ fn describing_a_document_sheet_works_on_its_projected_table() {
 #[test]
 fn describing_a_describe_sheet_does_not_panic() {
     let mut app = describe_via_the_ui("test_data/sample.csv");
-    app.handle_action(tuitab::types::Action::DescribeSheet);
+    app.handle_action(qrow::types::Action::DescribeSheet);
 
     let sheet = app.stack.active();
     assert_eq!(sheet.title, "Describe: Describe: sample.csv");

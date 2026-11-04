@@ -10,10 +10,10 @@
 //! `test_data/regex_name.csv` has headers `^total$`, `plain`, `.*` and `amount`.
 //! These tests pin what happens to them.
 
+use qrow::data::aggregator::AggregatorKind;
+use qrow::data::dataframe::DataFrame;
+use qrow::data::io::load_file;
 use std::path::Path;
-use tuitab::data::aggregator::AggregatorKind;
-use tuitab::data::dataframe::DataFrame;
-use tuitab::data::io::load_file;
 
 fn load() -> DataFrame {
     load_file(Path::new("test_data/regex_name.csv"), None).unwrap()
@@ -66,7 +66,7 @@ fn aggregating_over_a_regex_shaped_column_uses_that_column() {
 
 #[test]
 fn a_pivot_over_regex_shaped_columns_addresses_the_right_ones() {
-    use tuitab::data::expression::Expr;
+    use qrow::data::expression::Expr;
 
     let df = load();
     let formula = Expr::parse("sum(amount)").unwrap();

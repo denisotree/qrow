@@ -1,10 +1,10 @@
 //! Integer epoch columns read as datetimes, and written back as the integers they were.
 
+use qrow::data::io::{load_file, save_file_as};
+use qrow::mcp::{handle_message, Server};
+use qrow::types::ColumnType;
 use serde_json::{json, Value};
 use std::path::PathBuf;
-use tuitab::data::io::{load_file, save_file_as};
-use tuitab::mcp::{handle_message, Server};
-use tuitab::types::ColumnType;
 
 /// Inside the project, never the system temp dir.
 fn tmp(name: &str) -> PathBuf {
@@ -126,14 +126,7 @@ fn saving_a_detected_epoch_column_writes_the_original_integers() {
     let df = load_file(&path, None).unwrap();
     assert_eq!(df.columns[0].col_type, ColumnType::Datetime);
     let out = tmp("roundtrip-out.csv");
-    save_file_as(
-        &df,
-        None,
-        &out,
-        tuitab::data::io::doc_io::Shape::Records,
-        "t",
-    )
-    .unwrap();
+    save_file_as(&df, None, &out, qrow::data::io::doc_io::Shape::Records, "t").unwrap();
     let text = std::fs::read_to_string(&out).unwrap();
     assert!(text.contains("1787569800000"), "{}", text);
 }
@@ -207,12 +200,12 @@ fn parquet_load_and_csv_load_report_the_same_types() {
         &from_csv,
         None,
         &pq,
-        tuitab::data::io::doc_io::Shape::Records,
+        qrow::data::io::doc_io::Shape::Records,
         "t",
     )
     .unwrap();
     let from_parquet = load_file(&pq, None).unwrap();
-    let types = |df: &tuitab::data::dataframe::DataFrame| -> Vec<ColumnType> {
+    let types = |df: &qrow::data::dataframe::DataFrame| -> Vec<ColumnType> {
         df.columns.iter().map(|c| c.col_type).collect()
     };
     assert_eq!(types(&from_csv), types(&from_parquet));
@@ -226,25 +219,11 @@ fn saving_keeps_every_digit_and_the_number_type() {
     let path = csv("digits.csv", "x\n1.23456\n2.5\n");
     let df = load_file(&path, None).unwrap();
     let out = tmp("digits-out.csv");
-    save_file_as(
-        &df,
-        None,
-        &out,
-        tuitab::data::io::doc_io::Shape::Records,
-        "t",
-    )
-    .unwrap();
+    save_file_as(&df, None, &out, qrow::data::io::doc_io::Shape::Records, "t").unwrap();
     let text = std::fs::read_to_string(&out).unwrap();
     assert!(text.contains("1.23456"), "{}", text);
     let pq = tmp("digits.parquet");
-    save_file_as(
-        &df,
-        None,
-        &pq,
-        tuitab::data::io::doc_io::Shape::Records,
-        "t",
-    )
-    .unwrap();
+    save_file_as(&df, None, &pq, qrow::data::io::doc_io::Shape::Records, "t").unwrap();
     let back = load_file(&pq, None).unwrap();
     assert_eq!(back.columns[0].col_type, ColumnType::Float);
     assert_eq!(back.get_physical(0, 0), "1.23456");
@@ -321,7 +300,7 @@ fn a_datetime_filter_matches_the_moment_it_names() {
 /// still written back as the integers it was read from.
 #[test]
 fn a_joined_epoch_column_saves_as_its_integers() {
-    use tuitab::data::join::{join_dataframes, JoinType};
+    use qrow::data::join::{join_dataframes, JoinType};
     let left = load_file(&csv("join-left.csv", "k,Time\na,1787569800000\n"), None).unwrap();
     let right = load_file(&csv("join-right.csv", "k,sent_at\na,1787569800\n"), None).unwrap();
     let joined = join_dataframes(
@@ -337,7 +316,7 @@ fn a_joined_epoch_column_saves_as_its_integers() {
         &joined,
         None,
         &out,
-        tuitab::data::io::doc_io::Shape::Records,
+        qrow::data::io::doc_io::Shape::Records,
         "t",
     )
     .unwrap();
@@ -368,7 +347,7 @@ fn an_epoch_past_2262_saves_back_as_its_integer() {
             "1704092400000"
         };
         std::fs::write(&path, format!("id,{}\n1,{}\n2,{}\n", name, small, big)).unwrap();
-        let df = tuitab::data::io::open_target(&path, None, None).unwrap().df;
+        let df = qrow::data::io::open_target(&path, None, None).unwrap().df;
         let c = df.column_index(name).unwrap();
         assert!(
             df.columns[c].epoch_unit.is_some(),
@@ -376,14 +355,8 @@ fn an_epoch_past_2262_saves_back_as_its_integer() {
             name
         );
         let out = dir.join(format!("{}-out.csv", name));
-        tuitab::data::io::save_file_as(
-            &df,
-            None,
-            &out,
-            tuitab::data::io::doc_io::Shape::Records,
-            "t",
-        )
-        .unwrap();
+        qrow::data::io::save_file_as(&df, None, &out, qrow::data::io::doc_io::Shape::Records, "t")
+            .unwrap();
         let text = std::fs::read_to_string(&out).unwrap();
         assert!(text.contains(&format!("2,{}", big)), "{}", text);
     }
