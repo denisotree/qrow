@@ -33,7 +33,7 @@ fn write_responses() -> PathBuf {
 
 fn call(ops: Value) -> Value {
     let message = json!({"jsonrpc": "2.0", "id": 1, "method": "tools/call",
-        "params": {"name": "tuitab_query",
+        "params": {"name": "qrow_query",
                    "arguments": {"source": responses().to_string_lossy(), "ops": ops}}});
     handle_message(&mut Server::new(), &message.to_string()).unwrap()["result"].clone()
 }

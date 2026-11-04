@@ -1,7 +1,7 @@
 //! Tool definitions and dispatch.
 //!
 //! Five tools, each a whole step of the model's working loop rather than a
-//! mirror of a tuitab keybinding: find out what is in the file, compute over it,
+//! mirror of a qrow keybinding: find out what is in the file, compute over it,
 //! profile it, walk a nested document, or calculate with no file at all.
 
 use super::{pipeline, render, source, Server};
@@ -26,22 +26,22 @@ impl From<String> for CallError {
 /// that ships with the server, and how well it reads decides whether the tools
 /// get used correctly.
 pub const INSTRUCTIONS: &str = "\
-tuitab computes over data files so you do not have to. Send it the operations; \
+qrow computes over data files so you do not have to. Send it the operations; \
 read back the numbers. Never calculate over a file yourself when you can call \
 these tools — that is the entire point of them.
 
 WORKFLOW
-1. tuitab_inspect first, always. It tells you the real column names, their \
+1. qrow_inspect first, always. It tells you the real column names, their \
    inferred types, and how many rows there are. Guessing column names wastes a \
    round trip.
-2. tuitab_query to compute. Operations run in order, each on the previous \
+2. qrow_query to compute. Operations run in order, each on the previous \
    result.
 3. Explain the returned numbers to the user. Quote them; do not re-derive them.
 
 FORMATS
 csv, tsv, txt, parquet, arrow/feather/ipc, xlsx/xls, sqlite, duckdb, json, jsonl, \
 yaml, toml, md/markdown, and a directory path (which lists its files). For xlsx, sqlite \
-and duckdb, pass 'container' to pick a sheet or table; tuitab_inspect lists them with \
+and duckdb, pass 'container' to pick a sheet or table; qrow_inspect lists them with \
 their row and column counts, and for a database also the CREATE statement and each \
 column's declared SQL type, NOT NULL, PRIMARY KEY and DEFAULT. Views are listed and \
 readable; they cannot be written to. A database source always needs a 'container' — \
@@ -70,7 +70,7 @@ from. Pages need not carry the same fields — a field a page lacks is NULL. So 
 'content/**/index.md' turns a static site into a table you can group, join against a \
 database, and count.
 
-OPERATIONS for tuitab_query
+OPERATIONS for qrow_query
   {\"filter\": [{\"col\":\"region\",\"op\":\"eq\",\"value\":\"North\"}]}
       Entries are combined with AND. Operators: eq, ne, gt, ge, lt, le, in, \
       not_in, contains (regex, case-sensitive — write (?i) yourself), between \
@@ -154,7 +154,7 @@ p5, p25, p50, p75, p95.
 To filter groups (SQL's HAVING), put a filter after group_by.
 
 NOT SUPPORTED — do not attempt: subqueries, self-joins, and SQL of any kind. You \
-never write SQL here. When a table has to change, tuitab composes the SQL for you \
+never write SQL here. When a table has to change, qrow composes the SQL for you \
 and shows it to you before anything runs.
 
 PERCENT OF TOTAL
@@ -186,13 +186,13 @@ it writes.
 
 ARITHMETIC
 Any calculation, file or no file — a total from the conversation, a loan payment, a \
-percentage change, a standard deviation of numbers the user typed — goes to tuitab_calc. \
+percentage change, a standard deviation of numbers the user typed — goes to qrow_calc. \
 Do not do arithmetic in your head, not even two numbers. Quote the value it returns \
 and mention when its precision is not exact.
 
 NESTED DATA
-tuitab_query flattens JSON/YAML/TOML into a table. When the structure is deeper \
-than that survives, use tuitab_jq with a jq program instead.";
+qrow_query flattens JSON/YAML/TOML into a table. When the structure is deeper \
+than that survives, use qrow_jq with a jq program instead.";
 
 /// The half of the documentation that only exists when writing is allowed.
 pub const WRITE_INSTRUCTIONS: &str = "\
@@ -200,12 +200,12 @@ CHANGING A DATABASE TABLE
 This server was started with writing enabled, so two more tools exist. They work on \
 .sqlite and .duckdb sources with a 'container', and on tables only — never views.
 
-1. tuitab_write says what would happen. It writes nothing. Give it one of:
+1. qrow_write says what would happen. It writes nothing. Give it one of:
      {\"set\": {\"status\": \"archived\"}, \"where\": [{\"col\":\"id\",\"op\":\"in\",\"value\":[3,7,11]}]}
      {\"delete\": true, \"where\": [{\"col\":\"state\",\"op\":\"eq\",\"value\":\"draft\"}]}
      {\"insert\": [{\"name\":\"ann\",\"score\":10}]}
      {\"alter\": {\"add\": [{\"name\":\"tier\",\"type\":\"text\"}], \"drop\": [\"old\"], \"rename\": {\"nm\":\"name\"}}}
-   'where' takes the same predicates as tuitab_query's filter, and omitting it on \
+   'where' takes the same predicates as qrow_query's filter, and omitting it on \
    'set' changes every row — the plan tells you how many that is. 'delete' always \
    needs a 'where'. A JSON null in 'set' writes a real NULL. On 'insert' a column with \
    no value — left out, or given null — is left out of the statement, so the schema's \
@@ -219,13 +219,13 @@ This server was started with writing enabled, so two more tools exist. They work
    'warnings' names anything the statements do not spell out.
 2. Read the statements and the affected rows back to the user, with the counts when \
    the list was cut. This is the only confirmation there is.
-3. tuitab_write_apply with that plan_id runs exactly those statements, all of them or \
+3. qrow_write_apply with that plan_id runs exactly those statements, all of them or \
    none. If the table changed since step 1, nothing is written and you start over.
 
-tuitab_query's output.overwrite goes through the same two steps, for a table and for \
+qrow_query's output.overwrite goes through the same two steps, for a table and for \
 a plain file alike: replacing something that already exists answers with a plan_id and \
 what is about to be lost — for a table the DROP, CREATE and INSERT statements and the \
-rows it holds now, for a file its size — and tuitab_write_apply is what performs it.
+rows it holds now, for a file its size — and qrow_write_apply is what performs it.
 
 One change per call, and any new plan — from either tool — discards the previous one. \
 Raw SQL is still not available. alter adds, drops and renames columns; changing an existing \
@@ -251,7 +251,7 @@ pub fn definitions(write: bool) -> Vec<Value> {
             "path": {"type": "string", "description": "Path to the file, or a directory to list."},
             "container": {
                 "type": "string",
-                "description": "Sheet name (Excel), or table or view name (SQLite/DuckDB). A database source needs one. Call tuitab_inspect to see what is available."
+                "description": "Sheet name (Excel), or table or view name (SQLite/DuckDB). A database source needs one. Call qrow_inspect to see what is available."
             },
             "delimiter": {
                 "type": "string",
@@ -271,7 +271,7 @@ pub fn definitions(write: bool) -> Vec<Value> {
             },
             "detect_epoch": {
                 "type": "boolean",
-                "description": "Show an integer column named like a time (time, ts, timestamp, *_at, …) whose every value is an epoch in s, ms, us or ns as a UTC datetime. On by default; tuitab_inspect marks such a column with a note. false keeps the integers."
+                "description": "Show an integer column named like a time (time, ts, timestamp, *_at, …) whose every value is an epoch in s, ms, us or ns as a UTC datetime. On by default; qrow_inspect marks such a column with a note. false keeps the integers."
             }
         },
         "required": ["path"]
@@ -279,12 +279,12 @@ pub fn definitions(write: bool) -> Vec<Value> {
 
     let mut tools = vec![
         json!({
-            "name": "tuitab_inspect",
+            "name": "qrow_inspect",
             "title": "Inspect a data file",
             "description":
                 "Read a file's structure: its sheets or tables, its column names with the types \
-                 tuitab inferred, its row count, and a few sample rows. Call this before \
-                 tuitab_query so you use real column names instead of guessing.",
+                 qrow inferred, its row count, and a few sample rows. Call this before \
+                 qrow_query so you use real column names instead of guessing.",
             "inputSchema": {
                 "type": "object",
                 "properties": {
@@ -301,7 +301,7 @@ pub fn definitions(write: bool) -> Vec<Value> {
             "annotations": {"readOnlyHint": true, "openWorldHint": false}
         }),
         json!({
-            "name": "tuitab_query",
+            "name": "qrow_query",
             "title": "Compute over a data file",
             "description":
                 "Run one or more pipelines of operations over a file and return the results. \
@@ -363,7 +363,7 @@ pub fn definitions(write: bool) -> Vec<Value> {
             }
         }),
         json!({
-            "name": "tuitab_describe",
+            "name": "qrow_describe",
             "title": "Profile every column",
             "description":
                 "Statistical profile of each column: type, count, nulls, unique, min, max, mean, \
@@ -385,12 +385,12 @@ pub fn definitions(write: bool) -> Vec<Value> {
             "annotations": {"readOnlyHint": true, "openWorldHint": false}
         }),
         json!({
-            "name": "tuitab_jq",
+            "name": "qrow_jq",
             "title": "Query a nested document with jq",
             "description":
                 "Run a jq program over a JSON, JSONL, YAML or TOML file and return the result as \
                  JSON. Use this when the structure is too nested for a table — otherwise prefer \
-                 tuitab_query.",
+                 qrow_query.",
             "inputSchema": {
                 "type": "object",
                 "properties": {
@@ -402,7 +402,7 @@ pub fn definitions(write: bool) -> Vec<Value> {
             "annotations": {"readOnlyHint": true, "openWorldHint": false}
         }),
         json!({
-            "name": "tuitab_calc",
+            "name": "qrow_calc",
             "title": "Calculate",
             "description":
                 "Evaluate arithmetic exactly — any calculation, not only over files. Numbers are \
@@ -451,7 +451,7 @@ pub fn definitions(write: bool) -> Vec<Value> {
                     "expr": {"type": "string", "description": "A single expression, instead of 'steps'."},
                     "lists": {
                         "type": "object",
-                        "description": "Names bound to a numeric column of a query's result, for the steps to use as lists — samples nobody has to type in. Each is {\"source\": ..., \"ops\": [...], \"col\": \"name\"} with the source and operations tuitab_query takes; NULLs are left out. Example: {\"incident\": {\"source\": \"cpu.csv\", \"ops\": [{\"filter\": ...}], \"col\": \"value\"}}",
+                        "description": "Names bound to a numeric column of a query's result, for the steps to use as lists — samples nobody has to type in. Each is {\"source\": ..., \"ops\": [...], \"col\": \"name\"} with the source and operations qrow_query takes; NULLs are left out. Example: {\"incident\": {\"source\": \"cpu.csv\", \"ops\": [{\"filter\": ...}], \"col\": \"value\"}}",
                         "additionalProperties": {
                             "type": "object",
                             "properties": {
@@ -479,10 +479,10 @@ pub fn definitions(write: bool) -> Vec<Value> {
 /// Phase one: says what would happen, and is genuinely read-only.
 fn write_tool_schema(source_schema: &Value) -> Value {
     json!({
-        "name": "tuitab_write",
+        "name": "qrow_write",
         "title": "Plan a change to a database table",
         "description":
-            "Work out what changing a database table would do, and return the exact SQL —              nothing is written. Only .sqlite/.duckdb sources with a 'container', and only              tables, never views. Give one of 'set', 'delete', 'insert' or 'alter' per call.              Read the statements and the affected rows back to the user, then call              tuitab_write_apply with the returned plan_id to run exactly that plan.",
+            "Work out what changing a database table would do, and return the exact SQL — nothing is written. Only .sqlite/.duckdb sources with a 'container', and only tables, never views. Give one of 'set', 'delete', 'insert' or 'alter' per call. Read the statements and the affected rows back to the user, then call qrow_write_apply with the returned plan_id to run exactly that plan.",
         "inputSchema": {
             "type": "object",
             "properties": {
@@ -490,7 +490,7 @@ fn write_tool_schema(source_schema: &Value) -> Value {
                 "set": {
                     "type": "object",
                     "description":
-                        "Column name to new value, for every row 'where' matches. A JSON null                          writes a real NULL. Several columns become one UPDATE."
+                        "Column name to new value, for every row 'where' matches. A JSON null writes a real NULL. Several columns become one UPDATE."
                 },
                 "delete": {
                     "type": "boolean",
@@ -506,7 +506,7 @@ fn write_tool_schema(source_schema: &Value) -> Value {
                 "alter": {
                     "type": "object",
                     "description":
-                        "Change the table's shape. Types are string, integer, float, boolean,                          date, datetime.",
+                        "Change the table's shape. Types are string, integer, float, boolean, date, datetime.",
                     "properties": {
                         "add": {"type": "array", "items": {"type": "object"}},
                         "drop": {"type": "array", "items": {"type": "string"}},
@@ -516,7 +516,7 @@ fn write_tool_schema(source_schema: &Value) -> Value {
                 "where": {
                     "type": "array",
                     "description":
-                        "Which rows to change, in the same shape tuitab_query's 'filter' takes.                          Omit it on 'set' to change every row — the plan says how many that is.                          Ignored by 'insert' and 'alter'.",
+                        "Which rows to change, in the same shape qrow_query's 'filter' takes. Omit it on 'set' to change every row — the plan says how many that is. Ignored by 'insert' and 'alter'.",
                     "items": {"type": "object"}
                 },
                 "preview_rows": {
@@ -542,10 +542,10 @@ fn write_tool_schema(source_schema: &Value) -> Value {
 /// Phase two: destructive, and annotated as such so a client can gate it.
 fn apply_tool_schema() -> Value {
     json!({
-        "name": "tuitab_write_apply",
-        "title": "Run a plan from tuitab_write",
+        "name": "qrow_write_apply",
+        "title": "Run a plan from qrow_write",
         "description":
-            "Execute exactly the statements tuitab_write returned, in one transaction. The plan              is checked against the database first: if a row changed since the plan was made,              nothing is written.",
+            "Execute exactly the statements qrow_write returned, in one transaction. The plan is checked against the database first: if a row changed since the plan was made, nothing is written.",
         "inputSchema": {
             "type": "object",
             "properties": {"plan_id": {"type": "string"}},
@@ -562,19 +562,19 @@ fn apply_tool_schema() -> Value {
 
 pub fn call(server: &mut Server, name: &str, args: &Value) -> Result<Value, CallError> {
     match name {
-        "tuitab_inspect" => inspect(server, args),
-        "tuitab_query" => query(server, args),
-        "tuitab_describe" => describe_tool(server, args),
-        "tuitab_jq" => jq(args),
-        "tuitab_calc" => calc_tool(server, args),
+        "qrow_inspect" => inspect(server, args),
+        "qrow_query" => query(server, args),
+        "qrow_describe" => describe_tool(server, args),
+        "qrow_jq" => jq(args),
+        "qrow_calc" => calc_tool(server, args),
         // Named but unavailable: a model that learned the name elsewhere deserves the
         // reason rather than a bafflement about an unknown tool.
-        "tuitab_write" | "tuitab_write_apply" if !server.write => Err(CallError::Failed(format!(
+        "qrow_write" | "qrow_write_apply" if !server.write => Err(CallError::Failed(format!(
             "{} is off. Restart the server with --mcp-write to allow it to change rows.",
             name
         ))),
-        "tuitab_write" => super::write::plan(server, args),
-        "tuitab_write_apply" => super::write::apply(server, args),
+        "qrow_write" => super::write::plan(server, args),
+        "qrow_write_apply" => super::write::apply(server, args),
         other => Err(CallError::UnknownTool(other.to_string())),
     }
 }
@@ -595,7 +595,7 @@ pub fn source_arg(args: &Value) -> Result<source::Source, CallError> {
     Ok(source::Source::from_json(value)?)
 }
 
-// ── tuitab_inspect ──────────────────────────────────────────────────────────
+// ── qrow_inspect ──────────────────────────────────────────────────────────
 
 fn inspect(server: &mut Server, args: &Value) -> Result<Value, CallError> {
     let src = source_arg(args)?;
@@ -619,7 +619,7 @@ fn inspect(server: &mut Server, args: &Value) -> Result<Value, CallError> {
                 "path": src.path.to_string_lossy(),
                 "containers": containers_json(listed),
                 "note": format!(
-                    "This file holds {} table(s){}. Call tuitab_inspect again with \
+                    "This file holds {} table(s){}. Call qrow_inspect again with \
                      'container' set to one of them to see its columns.",
                     tables,
                     if views > 0 {
@@ -709,7 +709,7 @@ fn containers_json(listed: &[crate::data::io::ContainerInfo]) -> Value {
 
 /// Columns, with what the database declares them to be when there is a database.
 ///
-/// The inferred `type` is what tuitab worked out; `declared` is what the table says,
+/// The inferred `type` is what qrow worked out; `declared` is what the table says,
 /// and for anything the loader could not turn into a number the two disagree on
 /// purpose — a column declared INTEGER that holds text reads as text.
 fn columns_json_with_schema(
@@ -750,7 +750,7 @@ fn columns_json_with_schema(
     Value::Array(cols)
 }
 
-// ── tuitab_query ────────────────────────────────────────────────────────────
+// ── qrow_query ────────────────────────────────────────────────────────────
 
 struct Output {
     limit: usize,
@@ -1061,7 +1061,7 @@ fn run_streamed(
     }
 }
 
-/// Write a result to disk through tuitab's own saver, from the typed frame — the
+/// Write a result to disk through qrow's own saver, from the typed frame — the
 /// same values the rendered rows carry.
 fn write_result(
     server: &mut Server,
@@ -1135,7 +1135,7 @@ fn write_result(
                 )));
             }
             // Replacing is the destructive case, and the destructive case is planned
-            // and applied rather than done — the same handshake `tuitab_write` uses,
+            // and applied rather than done — the same handshake `qrow_write` uses,
             // for a change that destroys more than any `set` can.
             return super::write::plan_replacement(server, df, path, table);
         }
@@ -1210,7 +1210,7 @@ fn write_result(
     Ok(written)
 }
 
-// ── tuitab_describe ─────────────────────────────────────────────────────────
+// ── qrow_describe ─────────────────────────────────────────────────────────
 
 fn describe_tool(server: &mut Server, args: &Value) -> Result<Value, CallError> {
     let src = source_arg(args)?;
@@ -1230,7 +1230,7 @@ fn describe_tool(server: &mut Server, args: &Value) -> Result<Value, CallError> 
 
     // A scanned file is profiled from just the columns asked for, held to the memory
     // budget; anything else is loaded as before.
-    let df = whole_table(server, &src, &select, "tuitab_describe")?;
+    let df = whole_table(server, &src, &select, "qrow_describe")?;
 
     let mut profile = describe::describe(&df);
 
@@ -1242,7 +1242,7 @@ fn describe_tool(server: &mut Server, args: &Value) -> Result<Value, CallError> 
     render::table(&profile, describe::METRICS.len()).map_err(CallError::Failed)
 }
 
-/// `tuitab_calc`, with any `lists` — a name bound to a numeric column of a query's
+/// `qrow_calc`, with any `lists` — a name bound to a numeric column of a query's
 /// result — computed first, so a test can compare samples no one typed in.
 fn calc_tool(server: &mut Server, args: &Value) -> Result<Value, CallError> {
     let mut lists = Vec::new();
@@ -1269,7 +1269,7 @@ fn calc_tool(server: &mut Server, args: &Value) -> Result<Value, CallError> {
             // Only the column taken, so a wide table is not collected whole for it.
             let mut ops = ops;
             ops.push(pipeline::Op::Select(vec![col.to_string()]));
-            let df = whole_table(server, &src, &ops, "tuitab_calc lists").map_err(fail)?;
+            let df = whole_table(server, &src, &ops, "qrow_calc lists").map_err(fail)?;
             lists.push((name.clone(), numbers_of(&df, col).map_err(fail)?));
         }
     }
@@ -1309,7 +1309,7 @@ fn rename_metric(df: &mut crate::data::dataframe::DataFrame, from: &str, to: &st
     }
 }
 
-// ── tuitab_jq ───────────────────────────────────────────────────────────────
+// ── qrow_jq ───────────────────────────────────────────────────────────────
 
 fn jq(args: &Value) -> Result<Value, CallError> {
     let src = source_arg(args)?;

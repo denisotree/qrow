@@ -1,4 +1,4 @@
-//! Coverage for the per-column profile behind the `I` key and `tuitab_describe`.
+//! Coverage for the per-column profile behind the `I` key and `qrow_describe`.
 //!
 //! The expected numbers are worked out from `test_data/sample.csv` by hand, so
 //! this fails if the arithmetic changes — not merely if the output changes shape.

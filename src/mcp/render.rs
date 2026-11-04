@@ -43,12 +43,12 @@ fn cell(value: &AnyValue) -> Value {
         AnyValue::String(s) => json!(s),
         AnyValue::StringOwned(s) => json!(s.as_str()),
         // Dates, datetimes, categoricals and the nested types all render
-        // through tuitab's own formatter so they match what the TUI shows.
+        // through qrow's own formatter so they match what the TUI shows.
         other => json!(DataFrame::anyvalue_to_string_fmt(other)),
     }
 }
 
-/// Column descriptors: name plus the type tuitab inferred.
+/// Column descriptors: name plus the type qrow inferred.
 pub fn columns_json(df: &DataFrame) -> Vec<Value> {
     df.columns
         .iter()

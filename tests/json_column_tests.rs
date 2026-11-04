@@ -36,7 +36,7 @@ fn write_clients() -> PathBuf {
 
 fn query(ops: Value) -> Value {
     let message = json!({"jsonrpc": "2.0", "id": 1, "method": "tools/call",
-        "params": {"name": "tuitab_query",
+        "params": {"name": "qrow_query",
                    "arguments": {"source": clients().to_string_lossy(), "ops": ops}}});
     let response = handle_message(&mut Server::new(), &message.to_string()).unwrap();
     let result = &response["result"];
@@ -46,7 +46,7 @@ fn query(ops: Value) -> Value {
 
 fn query_error(ops: Value) -> String {
     let message = json!({"jsonrpc": "2.0", "id": 1, "method": "tools/call",
-        "params": {"name": "tuitab_query",
+        "params": {"name": "qrow_query",
                    "arguments": {"source": clients().to_string_lossy(), "ops": ops}}});
     let response = handle_message(&mut Server::new(), &message.to_string()).unwrap();
     let result = &response["result"];

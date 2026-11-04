@@ -1,4 +1,4 @@
-//! `tuitab_calc`: exact decimals, honest precision labels, named steps.
+//! `qrow_calc`: exact decimals, honest precision labels, named steps.
 
 use qrow::mcp::calc::run;
 use serde_json::{json, Value};
@@ -220,7 +220,7 @@ fn the_server_runs_it() {
     let response = call(
         &mut server,
         json!({"jsonrpc": "2.0", "id": 2, "method": "tools/call",
-               "params": {"name": "tuitab_calc", "arguments": {"expr": "0.1 + 0.2"}}}),
+               "params": {"name": "qrow_calc", "arguments": {"expr": "0.1 + 0.2"}}}),
     );
     assert_eq!(response["result"]["isError"], false);
     assert_eq!(

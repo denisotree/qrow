@@ -30,7 +30,7 @@ fn write_wide() -> PathBuf {
 
 fn call(ops: Value) -> Value {
     let message = json!({"jsonrpc": "2.0", "id": 1, "method": "tools/call",
-        "params": {"name": "tuitab_query",
+        "params": {"name": "qrow_query",
                    "arguments": {"source": wide().to_string_lossy(), "ops": ops,
                                  "output": {"limit": 1000}}}});
     handle_message(&mut Server::new(), &message.to_string()).unwrap()["result"].clone()

@@ -42,7 +42,7 @@ fn call(server: &mut Server, name: &str, arguments: Value) -> (bool, Value) {
 fn rows(server: &mut Server, path: &str) -> (bool, Value) {
     call(
         server,
-        "tuitab_query",
+        "qrow_query",
         json!({"source": {"path": path}, "ops": []}),
     )
 }
@@ -115,7 +115,7 @@ fn a_directory_is_a_list_of_its_files() {
     let mut server = Server::new();
     let (err, out) = call(
         &mut server,
-        "tuitab_inspect",
+        "qrow_inspect",
         json!({"source": {"path": base.to_string_lossy()}}),
     );
     assert!(!err, "{}", out);
@@ -177,7 +177,7 @@ fn a_page_is_a_row_of_its_frontmatter() {
     // And the point of the exercise: arithmetic over a directory of pages.
     let (err, total) = call(
         &mut server,
-        "tuitab_query",
+        "qrow_query",
         json!({"source": {"path": format!("{}/*/index.md", base.display())},
                "ops": [{"aggregate": [{"col": "price", "fn": "sum"}]}]}),
     );

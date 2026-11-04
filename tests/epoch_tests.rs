@@ -48,11 +48,7 @@ fn column<'a>(inspect: &'a Value, name: &str) -> &'a Value {
 #[test]
 fn epoch_ms_column_named_time_becomes_datetime() {
     let path = csv("grafana.csv", "Time,v\n1787569800000,1\n1787570400000,2\n");
-    let out = call(
-        &mut Server::new(),
-        "tuitab_inspect",
-        json!({"source": path}),
-    );
+    let out = call(&mut Server::new(), "qrow_inspect", json!({"source": path}));
     let time = column(&out, "Time");
     assert_eq!(time["type"], "datetime", "{}", out);
     assert!(
@@ -93,13 +89,13 @@ fn epoch_detection_leaves_other_integers_alone() {
 fn seconds_and_microseconds_are_told_apart() {
     let s = csv("s.csv", "created_at\n1787569800\n");
     let us = csv("us.csv", "event_ts\n1787569800000000\n");
-    let out = call(&mut Server::new(), "tuitab_inspect", json!({"source": s}));
+    let out = call(&mut Server::new(), "qrow_inspect", json!({"source": s}));
     assert!(column(&out, "created_at")["note"]
         .as_str()
         .unwrap()
         .contains("epoch s"));
     assert_eq!(out["sample_rows"][0][0], json!("2026-08-24 11:10:00"));
-    let out = call(&mut Server::new(), "tuitab_inspect", json!({"source": us}));
+    let out = call(&mut Server::new(), "qrow_inspect", json!({"source": us}));
     assert!(column(&out, "event_ts")["note"]
         .as_str()
         .unwrap()
@@ -111,7 +107,7 @@ fn detect_epoch_false_keeps_the_integers() {
     let path = csv("off.csv", "Time\n1787569800000\n");
     let out = call(
         &mut Server::new(),
-        "tuitab_inspect",
+        "qrow_inspect",
         json!({"source": {"path": path, "detect_epoch": false}}),
     );
     assert_eq!(column(&out, "Time")["type"], "integer", "{}", out);
@@ -149,7 +145,7 @@ fn a_glob_of_epoch_files_keeps_the_detection() {
     let pattern = tmp("glob-*.csv").to_string_lossy().into_owned();
     let out = call(
         &mut Server::new(),
-        "tuitab_inspect",
+        "qrow_inspect",
         json!({"source": pattern}),
     );
     assert_eq!(out["row_count"], 2, "{}", out);
@@ -167,7 +163,7 @@ fn hour_of_a_detected_column_groups_into_integers() {
     );
     let out = call(
         &mut Server::new(),
-        "tuitab_query",
+        "qrow_query",
         json!({"source": path, "ops": [
             {"compute": {"name": "h", "expr": "hour(Time)"}},
             {"group_by": {"by": ["h"], "agg": [{"col": "*", "fn": "count"}]}}
@@ -259,7 +255,7 @@ fn a_datetime_filter_matches_the_moment_it_names() {
         let count = |filter: Value| -> Value {
             call(
                 &mut Server::new(),
-                "tuitab_query",
+                "qrow_query",
                 json!({"source": path, "ops": [{"filter": filter}, {"aggregate": [{"col": "*", "fn": "count"}]}]}),
             )["rows"][0][0]
                 .clone()

@@ -19,7 +19,7 @@ fn csv(name: &str, text: &str) -> PathBuf {
 
 fn query(path: &std::path::Path, ops: Value) -> Value {
     let message = json!({"jsonrpc": "2.0", "id": 1, "method": "tools/call",
-        "params": {"name": "tuitab_query",
+        "params": {"name": "qrow_query",
                    "arguments": {"source": path.to_string_lossy(), "ops": ops}}});
     let response = handle_message(&mut Server::new(), &message.to_string()).unwrap();
     let result = &response["result"];
@@ -68,7 +68,7 @@ fn mad_as_a_grand_total() {
 fn mad_refuses_text() {
     let path = csv("text.csv", "s\na\nb\n");
     let message = json!({"jsonrpc": "2.0", "id": 1, "method": "tools/call",
-        "params": {"name": "tuitab_query", "arguments": {"source": path.to_string_lossy(),
+        "params": {"name": "qrow_query", "arguments": {"source": path.to_string_lossy(),
             "ops": [{"aggregate": [{"col": "s", "fn": "mad"}]}]}}});
     let response = handle_message(&mut Server::new(), &message.to_string()).unwrap();
     assert_eq!(response["result"]["isError"], json!(true));
@@ -134,7 +134,7 @@ fn window_median_and_mad_over_a_partition() {
 fn median_and_mad_windows_refuse_an_order() {
     let path = csv("order.csv", "v\n1\n2\n");
     let message = json!({"jsonrpc": "2.0", "id": 1, "method": "tools/call",
-        "params": {"name": "tuitab_query", "arguments": {"source": path.to_string_lossy(),
+        "params": {"name": "qrow_query", "arguments": {"source": path.to_string_lossy(),
             "ops": [{"window": {"fn": "mad", "col": "v", "order_by": ["v"]}}]}}});
     let response = handle_message(&mut Server::new(), &message.to_string()).unwrap();
     assert_eq!(response["result"]["isError"], json!(true));
