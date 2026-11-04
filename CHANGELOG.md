@@ -17,9 +17,10 @@ tuitab is now **qrow**. The program is the same; its name, commands and addresse
   `cargo binstall qrow` installs `qrow` alone.
 - The MCP server reports itself as `qrow`, and its tools are `qrow_inspect`,
   `qrow_query`, `qrow_describe`, `qrow_jq`, `qrow_calc`, `qrow_write` and
-  `qrow_write_apply`. Re-register it — `claude mcp remove -s user tuitab && claude mcp
-  add -s user qrow -- qrow --mcp`, adding `--mcp-write` if you had it — and change
-  permission rules from `mcp__tuitab__tuitab_*` to `mcp__qrow__qrow_*`.
+  `qrow_write_apply`. Re-register it — `claude mcp remove tuitab && claude mcp add -s
+  user qrow -- qrow --mcp`, adding `--mcp-write` if you had it — and rename permission
+  rules: `mcp__tuitab__tuitab_query` becomes `mcp__qrow__qrow_query`, `mcp__tuitab`
+  becomes `mcp__qrow`.
 - The repository is [denisotree/qrow](https://github.com/denisotree/qrow) and the site
   [qrow.dev](https://qrow.dev). [denisotree/tuitab](https://github.com/denisotree/tuitab)
   stays as the archive of 0.11.1 and earlier.

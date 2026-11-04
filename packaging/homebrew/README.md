@@ -25,8 +25,10 @@ formula to `Formula/qrow.rb` in the tap and push to `main`.
 
 ## Testing the formula locally
 
+In a clone of the tap:
+
 ```sh
-brew install --build-from-source Formula/qrow.rb
+brew install denisotree/qrow/qrow
 brew test qrow
-brew audit --new qrow
+brew audit --strict denisotree/qrow/qrow
 ```

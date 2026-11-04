@@ -14,7 +14,6 @@ class Qrow < Formula
   desc "Query rows in tables, documents and databases from the terminal"
   homepage "https://qrow.dev"
   license "Apache-2.0"
-  head "https://github.com/denisotree/qrow.git", branch: "master"
 
   on_macos do
     on_arm do

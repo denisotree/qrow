@@ -12,9 +12,10 @@ go in as plain `PKGBUILD` and `.SRCINFO`.
 
 ## Coming from tuitab
 
-`qrow` and `qrow-bin` carry `replaces`/`conflicts` for `tuitab` and
-`tuitab-bin`, the same program under its former name: pacman offers to replace
-the old package. The old AUR packages are merged into the new ones with a merge
+`qrow` and `qrow-bin` declare `conflicts` with `tuitab` and `tuitab-bin`, the same
+program under its former name, so installing one asks to remove the old package.
+`replaces` is there too, but pacman only acts on it for packages from a sync
+repository, not for AUR builds. The old AUR packages are merged into the new ones with a merge
 request (https://aur.archlinux.org/pkgbase/tuitab/request → Merge into `qrow`,
 and the same for `tuitab-bin` → `qrow-bin`).
 

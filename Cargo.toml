@@ -84,12 +84,13 @@ depends = "$auto"
 conflicts = "tuitab"
 replaces = "tuitab"
 extended-description = """\
-A fast, keyboard-driven terminal viewer for tabular data: CSV, TSV, JSON,
-JSONL, YAML, TOML, Parquet, Arrow, Excel, SQLite and DuckDB. Filtering,
-sorting, pivot tables, computed columns, statistics and charts. JSON, YAML and
-TOML open as a table over the parsed document, so nested data can be browsed,
-edited and converted between formats. Installs `qrow` and the short alias
-`qrw`."""
+A fast, keyboard-driven terminal viewer for tables, documents and databases,
+with an MCP server that lets AI assistants compute over the same files. Reads
+CSV, TSV, JSON, JSONL, YAML, TOML, Markdown, Parquet, Arrow, Excel, SQLite and
+DuckDB. Filtering, sorting, pivot tables, joins, computed columns, statistics
+and charts. JSON, YAML and TOML open as a table over the parsed document, so
+nested data can be browsed, edited and converted between formats. Installs
+`qrow` and the short alias `qrw`. Replaces tuitab, its former name."""
 # Every entry is a table on purpose: dependabot's TOML library cannot re-emit an
 # array that mixes arrays with tables, and dies on Cargo.toml before it can open
 # an update PR.  Table form is what cargo-deb documents for symlinks anyway.

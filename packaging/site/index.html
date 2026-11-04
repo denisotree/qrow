@@ -121,7 +121,7 @@
   <div>
     <h1 class="name">qrow</h1>
     <p class="lede">Query rows in tables, documents and databases — from the terminal or through an AI assistant.</p>
-    <p class="formats">CSV, TSV, JSON, JSONL, YAML, TOML, Markdown, Parquet, Arrow, Excel, SQLite and DuckDB. Large CSV, Parquet, Arrow and JSONL files are read as a stream, not loaded whole.</p>
+    <p class="formats">CSV, TSV, JSON, JSONL, YAML, TOML, Markdown, Parquet, Arrow, Excel, SQLite and DuckDB. Through the MCP server, large CSV, Parquet, Arrow and JSONL files are read as a stream, not loaded whole.</p>
     <div class="sheet-wrap">
       <table class="sheet">
         <caption>qrow sales.csv</caption>
@@ -161,7 +161,7 @@ brew install qrow</code></pre>
 echo "deb [signed-by=/usr/share/keyrings/qrow.gpg] https://qrow.dev/apt stable main" \
   | sudo tee /etc/apt/sources.list.d/qrow.list
 sudo apt update &amp;&amp; sudo apt install qrow</code></pre>
-      <p style="margin-top:0.75rem">amd64 and arm64, Debian 12+ and Ubuntu 22.04+. Pre-built archives for Linux and macOS are on the <a href="https://github.com/denisotree/qrow/releases">releases page</a>. Every install brings two commands: <code>qrow</code> and the short <code>qrw</code>.</p>
+      <p style="margin-top:0.75rem">amd64 and arm64, Debian 12+ and Ubuntu 22.04+. Pre-built archives for Linux and macOS are on the <a href="https://github.com/denisotree/qrow/releases">releases page</a>. Cargo, Homebrew, AUR and APT install <code>qrow</code> and the short <code>qrw</code>; the release archives carry <code>qrow</code> alone.</p>
       <details>
         <summary>The APT signing key</summary>
         <p style="margin-top:0.75rem"><a href="https://qrow.dev/apt/qrow.gpg">qrow.dev/apt/qrow.gpg</a>, fingerprint<br><code class="fp">F1A1 0D49 EB64 0A0F 7C2E F9FD 3C84 7155 6244 EF39</code></p>
@@ -202,9 +202,9 @@ sudo apt update &amp;&amp; sudo apt install qrow</code></pre>
       <p>The old repository stays at 0.11.1. Remove it, then add the new one as in Install above; installing qrow removes tuitab.</p>
       <pre><code>sudo rm /etc/apt/sources.list.d/tuitab.list /usr/share/keyrings/tuitab.gpg</code></pre>
       <h3>MCP</h3>
-      <pre><code>claude mcp remove -s user tuitab
+      <pre><code>claude mcp remove tuitab
 claude mcp add -s user qrow -- qrow --mcp</code></pre>
-      <p style="margin-top:0.75rem">Keep <code>--mcp-write</code> if you had it. Permission rules follow the server's name: <code>mcp__tuitab__tuitab_*</code> becomes <code>mcp__qrow__qrow_*</code>. In a JSON config, rename the key and the command to <code>qrow</code>.</p>
+      <p style="margin-top:0.75rem">Keep <code>--mcp-write</code> if you had it. Permission rules follow the server's name: <code>mcp__tuitab__tuitab_query</code> becomes <code>mcp__qrow__qrow_query</code>, and <code>mcp__tuitab</code> becomes <code>mcp__qrow</code>. In a JSON config, rename the key and the command to <code>qrow</code>.</p>
     </div>
   </section>
 

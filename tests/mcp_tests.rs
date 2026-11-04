@@ -2799,12 +2799,19 @@ fn tool_descriptions_have_no_runs_of_spaces() {
         &mut server,
         json!({"jsonrpc": "2.0", "id": 1, "method": "tools/list"}),
     );
+    fn walk(name: &Value, at: &Value) {
+        match at {
+            Value::Object(map) => {
+                if let Some(Value::String(text)) = map.get("description") {
+                    assert!(!text.contains("  "), "{name}: {text}");
+                }
+                map.values().for_each(|v| walk(name, v));
+            }
+            Value::Array(items) => items.iter().for_each(|v| walk(name, v)),
+            _ => {}
+        }
+    }
     for tool in response["result"]["tools"].as_array().unwrap() {
-        let description = tool["description"].as_str().unwrap();
-        assert!(
-            !description.contains("  "),
-            "{}: {description}",
-            tool["name"]
-        );
+        walk(&tool["name"], tool);
     }
 }

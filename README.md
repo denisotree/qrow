@@ -394,8 +394,6 @@ and `ttb` are now `qrow` and `qrw`; the MCP server is `qrow` and its tools are
 
 - **Cargo:** `cargo uninstall tuitab && cargo install qrow`.
 - **Homebrew:** `brew update && brew upgrade` replaces tuitab with qrow by itself.
-  Optionally, to rename the tap on your machine as well:
-  `brew untap denisotree/tuitab && brew tap denisotree/qrow`.
 - **AUR:** install `qrow` or `qrow-bin`; pacman offers to replace `tuitab` or
   `tuitab-bin`.
 - **APT:** the old repository stays at 0.11.1 and gets no updates. Remove it, add the
@@ -409,12 +407,12 @@ and `ttb` are now `qrow` and `qrw`; the MCP server is `qrow` and its tools are
   `--mcp-write` if you had it:
 
   ```sh
-  claude mcp remove -s user tuitab
+  claude mcp remove tuitab
   claude mcp add -s user qrow -- qrow --mcp
   ```
 
-  Permission rules follow the server's name: `mcp__tuitab__tuitab_*` becomes
-  `mcp__qrow__qrow_*`.
+  Permission rules follow the server's name: a rule like `mcp__tuitab__tuitab_query`
+  becomes `mcp__qrow__qrow_query`, and `mcp__tuitab` becomes `mcp__qrow`.
 - **MCP clients configured with JSON** (Claude Desktop, Cursor, Zed and others): rename
   the key and the `command` to `qrow`, with the full path if you used one —
   `/opt/homebrew/bin/qrow` after a Homebrew upgrade, since `/opt/homebrew/bin/tuitab` is
