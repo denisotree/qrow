@@ -1,25 +1,29 @@
-Source: tuitab
+Source: qrow
 Section: utils
 Priority: optional
 Maintainer: denisotree <denisotree@users.noreply.github.com>
 Build-Depends: debhelper-compat (= 13), cargo, rustc
 Standards-Version: 4.6.2
-Homepage: https://github.com/denisotree/tuitab
-Vcs-Git: https://github.com/denisotree/tuitab.git
-Vcs-Browser: https://github.com/denisotree/tuitab
+Homepage: https://qrow.dev
+Vcs-Git: https://github.com/denisotree/qrow.git
+Vcs-Browser: https://github.com/denisotree/qrow
 Rules-Requires-Root: no
 
-Package: tuitab
+Package: qrow
 Architecture: any
 Depends: ${misc:Depends}, ${shlibs:Depends}
-Description: Terminal tabular data explorer
- tuitab is a fast, keyboard-driven terminal viewer for tabular data.
- It supports CSV, TSV, JSON, JSONL, YAML, TOML, Parquet, Excel (xlsx/xls),
- and SQLite files.  JSON, YAML and TOML open as a table over the parsed
- document, so nested structures can be browsed, edited and converted between
- formats without losing their shape.
+Conflicts: tuitab
+Replaces: tuitab
+Description: Query rows in tables, documents and databases from the terminal
+ qrow is a fast, keyboard-driven terminal viewer for tabular data, with an
+ MCP server that lets AI assistants compute over the same files.
+ It supports CSV, TSV, JSON, JSONL, YAML, TOML, Parquet, Arrow, Excel
+ (xlsx/xls), SQLite and DuckDB files.  JSON, YAML and TOML open as a table over
+ the parsed document, so nested structures can be browsed, edited and converted
+ between formats without losing their shape.
  .
  Features include filtering, sorting, pivot tables, computed columns,
  column statistics, histograms and line/bar charts, transposing, and export.
  .
- The package provides three command names: tuitab, ttab, and ttb.
+ The package provides two command names: qrow and its short alias qrw.
+ It replaces tuitab, the same program under its former name.

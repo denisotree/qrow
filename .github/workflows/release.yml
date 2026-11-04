@@ -7,7 +7,7 @@ on:
 
 env:
   CARGO_TERM_COLOR: always
-  BIN_NAME: tuitab
+  BIN_NAME: qrow
   CARGO_INCREMENTAL: "0"
   RUSTFLAGS: "-C debuginfo=0"
 
@@ -132,7 +132,7 @@ jobs:
       - name: Generate SHA256SUMS
         run: |
           cd artifacts
-          sha256sum * > SHA256SUMS || shasum -a 256 * > SHA256SUMS
+          sha256sum -- * > SHA256SUMS || shasum -a 256 -- * > SHA256SUMS
 
       - name: Create release
         uses: softprops/action-gh-release@v3

@@ -1,7 +1,7 @@
 name: APT repository
 
 # Publishes a release's .deb files into the signed APT repository served from
-# the gh-pages branch (https://denisotree.github.io/tuitab/apt).  Called by
+# the gh-pages branch, served at https://qrow.dev/apt.  Called by
 # release.yml once the GitHub Release exists; run it by hand to republish a tag.
 on:
   workflow_call:
@@ -72,6 +72,10 @@ jobs:
             git -C site remote add origin "$url"
           fi
           touch site/.nojekyll
+          # The landing page and the custom domain live in the repository, so a
+          # fresh branch gets them too and an edit to the page ships with the next
+          # release.
+          cp packaging/site/CNAME packaging/site/index.html site/
 
       - name: Build repository
         if: steps.key.outputs.ok == 'true'

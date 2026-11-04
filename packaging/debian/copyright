@@ -1,7 +1,7 @@
 Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
-Upstream-Name: tuitab
+Upstream-Name: qrow
 Upstream-Contact: denisotree <denisotree@users.noreply.github.com>
-Source: https://github.com/denisotree/tuitab
+Source: https://github.com/denisotree/qrow
 
 Files: *
 Copyright: 2026 denisotree

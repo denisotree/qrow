@@ -1,18 +1,21 @@
 # Maintainer: denisotree <denisotree@users.noreply.github.com>
-# AUR package: tuitab  (builds from source)
-# AUR page: https://aur.archlinux.org/packages/tuitab
+# AUR package: qrow  (builds from source)
+# AUR page: https://aur.archlinux.org/packages/qrow
 
-pkgname=tuitab
+pkgname=qrow
 pkgver=0.11.1
 pkgrel=1
-pkgdesc="Terminal tabular data explorer — CSV/JSON/YAML/TOML/Parquet/Excel/SQLite viewer"
+pkgdesc="Query rows in tables, documents and databases from the terminal"
 arch=('x86_64' 'aarch64')
-url="https://github.com/denisotree/tuitab"
+url="https://github.com/denisotree/qrow"
 license=('Apache-2.0')
 depends=()
+# tuitab is the same program under its former name.
+conflicts=('tuitab')
+replaces=('tuitab')
 makedepends=('rust' 'cargo')
 source=("$pkgname-$pkgver.tar.gz::$url/archive/refs/tags/v$pkgver.tar.gz")
-sha256sums=('c569e8c756cdd97763a38174bb185f4916bd1b6cd9e14e58d446c9814512fdb4')
+sha256sums=('SKIP')
 
 prepare() {
     cd "$pkgname-$pkgver"
@@ -37,11 +40,10 @@ package() {
     cd "$pkgname-$pkgver"
 
     # Main binary
-    install -Dm755 "target/release/tuitab" "$pkgdir/usr/bin/tuitab"
+    install -Dm755 "target/release/qrow" "$pkgdir/usr/bin/qrow"
 
-    # Short aliases
-    ln -s /usr/bin/tuitab "$pkgdir/usr/bin/ttab"
-    ln -s /usr/bin/tuitab "$pkgdir/usr/bin/ttb"
+    # Short alias
+    ln -s /usr/bin/qrow "$pkgdir/usr/bin/qrw"
 
     # License
     install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"

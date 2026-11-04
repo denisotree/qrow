@@ -1,62 +1,39 @@
-# Arch Linux AUR / pacman packaging
+# Arch Linux AUR packaging
 
-## AUR submission
+Two AUR packages are built from this directory:
 
-1. Create an AUR account at https://aur.archlinux.org
-2. Add your SSH key to your AUR account
-3. Clone the AUR package skeleton:
+| AUR package | Files here | Builds |
+|---|---|---|
+| [`qrow`](https://aur.archlinux.org/packages/qrow) | `PKGBUILD`, `.SRCINFO` | from the tag tarball |
+| [`qrow-bin`](https://aur.archlinux.org/packages/qrow-bin) | `PKGBUILD-bin`, `.SRCINFO-bin` | from the release archive |
 
-   ```sh
-   git clone ssh://aur@aur.archlinux.org/tuitab.git aur-tuitab
-   ```
+AUR reads `.SRCINFO`, not `PKGBUILD`, so both are copied together. `-bin` files
+go in as plain `PKGBUILD` and `.SRCINFO`.
 
-4. Copy `PKGBUILD` (source build) into `aur-tuitab/`
-5. Generate `.SRCINFO`:
+## Coming from tuitab
 
-   ```sh
-   cd aur-tuitab
-   makepkg --printsrcinfo > .SRCINFO
-   ```
+`qrow` and `qrow-bin` carry `replaces`/`conflicts` for `tuitab` and
+`tuitab-bin`, the same program under its former name: pacman offers to replace
+the old package. The old AUR packages are merged into the new ones with a merge
+request (https://aur.archlinux.org/pkgbase/tuitab/request → Merge into `qrow`,
+and the same for `tuitab-bin` → `qrow-bin`).
 
-6. Update the `sha256sums` entry with the real checksum:
+## Publishing a release
 
-   ```sh
-   curl -sL https://github.com/denisotree/tuitab/archive/refs/tags/v0.1.0.tar.gz | sha256sum
-   ```
+```sh
+git clone ssh://aur@aur.archlinux.org/qrow.git tmp/aur-qrow
+cp packaging/aur/PKGBUILD packaging/aur/.SRCINFO tmp/aur-qrow/
+cd tmp/aur-qrow && git add PKGBUILD .SRCINFO && git commit -m "Update to <version>" && git push
+```
 
-7. Commit and push:
+The source package's `sha256sums` is the hash of the GitHub tag tarball
+(`archive/refs/tags/v<version>.tar.gz`); the `-bin` hashes come from the
+release's `SHA256SUMS`.
 
-   ```sh
-   git add PKGBUILD .SRCINFO
-   git commit -m "Initial release v0.1.0"
-   git push
-   ```
-
-## Binary AUR package (tuitab-bin)
-
-Repeat the same steps for `PKGBUILD-bin` using the `tuitab-bin` AUR package name.
-This package downloads pre-built binaries, so users don't need a Rust toolchain.
-
-## Installing locally (for testing)
+## Checking the files
 
 ```sh
 cd packaging/aur
-makepkg -si
+makepkg --printsrcinfo | diff - .SRCINFO
+makepkg -si   # build and install locally
 ```
-
-## Updating for a new release
-
-1. Bump `pkgver` and `pkgrel=1` in PKGBUILD
-2. Update `sha256sums` with the new release tarball checksum
-3. Regenerate `.SRCINFO` and push
-
-## pacman (unofficial user repo)
-
-If you want to host your own pacman-compatible repo (e.g. for Manjaro or EndeavourOS), you can use `repo-add` after building:
-
-```sh
-makepkg -s
-repo-add tuitab.db.tar.gz tuitab-0.1.0-1-x86_64.pkg.tar.zst
-```
-
-Then host the `*.db`, `*.files`, and `*.pkg.tar.zst` files on a web server and share the repo URL.

@@ -1,5 +1,5 @@
 #!/usr/bin/make -f
-# debhelper rules for tuitab
+# debhelper rules for qrow
 
 %:
 	dh $@
@@ -8,13 +8,11 @@ override_dh_auto_build:
 	cargo build --release --locked
 
 override_dh_auto_install:
-	install -Dm755 target/release/tuitab \
-		$(CURDIR)/debian/tuitab/usr/bin/tuitab
-	# Short aliases
-	ln -s /usr/bin/tuitab \
-		$(CURDIR)/debian/tuitab/usr/bin/ttab
-	ln -s /usr/bin/tuitab \
-		$(CURDIR)/debian/tuitab/usr/bin/ttb
+	install -Dm755 target/release/qrow \
+		$(CURDIR)/debian/qrow/usr/bin/qrow
+	# Short alias
+	ln -s /usr/bin/qrow \
+		$(CURDIR)/debian/qrow/usr/bin/qrw
 
 override_dh_auto_test:
 	cargo test --locked
