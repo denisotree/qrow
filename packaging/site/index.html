@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>qrow — query rows in tables, documents and databases</title>
+<meta name="description" content="Query rows in tables, documents and databases from the terminal — CSV, JSON, YAML, TOML, Parquet, Excel, SQLite, DuckDB — with an MCP server that lets AI assistants compute over the same files.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%23fbfcf7'/%3E%3Crect y='5' width='16' height='6' fill='%23dfeedd'/%3E%3Cpath d='M2 8h12' stroke='%231f6a3a' stroke-width='2'/%3E%3C/svg%3E">
+<style>
+  :root {
+    --paper: #fbfcf7;
+    --band: #e6f0e2;
+    --rule: #b9cdb6;
+    --ink: #1c2620;
+    --quiet: #5a6b5f;
+    --cursor: #1f6a3a;
+    --link: #1d4f91;
+    --body: "Iowan Old Style", "Charter", "Bitstream Charter", "Sitka Text", Cambria, Georgia, serif;
+    --mono: ui-monospace, "SF Mono", "Cascadia Mono", "JetBrains Mono", Menlo, Consolas, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --paper: #141a16;
+      --band: #1b241e;
+      --rule: #34463a;
+      --ink: #e3ebe2;
+      --quiet: #9cae9f;
+      --cursor: #7fd29a;
+      --link: #9cc3ff;
+    }
+  }
+  * { box-sizing: border-box; }
+  html { background: var(--paper); color: var(--ink); }
+  body {
+    margin: 0;
+    font: 1.0625rem/1.65 var(--body);
+    -webkit-text-size-adjust: 100%;
+  }
+  a { color: var(--link); text-underline-offset: 0.18em; }
+  a:focus-visible, summary:focus-visible { outline: 2px solid var(--cursor); outline-offset: 3px; }
+  code, pre, kbd { font-family: var(--mono); font-size: 0.86em; }
+  pre {
+    margin: 0.75rem 0 0;
+    padding: 0.85rem 1rem;
+    overflow-x: auto;
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    line-height: 1.55;
+    tab-size: 2;
+  }
+  p { margin: 0 0 0.75rem; max-width: 66ch; }
+  p:last-child { margin-bottom: 0; }
+
+  /* The page reads like a printout on green-bar paper: every section is a row. */
+  .row {
+    display: grid;
+    grid-template-columns: minmax(9rem, 14rem) minmax(0, 46rem);
+    gap: 0 3rem;
+    padding: 2.25rem max(1.5rem, calc((100vw - 64rem) / 2));
+    border-top: 1px solid var(--rule);
+  }
+  .row:nth-of-type(even) { background: var(--band); }
+  .row > h2 {
+    margin: 0.1rem 0 1rem;
+    font: 600 1rem/1.4 var(--mono);
+    color: var(--quiet);
+  }
+  .row h3 {
+    margin: 1.5rem 0 0;
+    font: 600 1rem/1.4 var(--body);
+  }
+  .row h3:first-child { margin-top: 0; }
+  .row h3 + p { margin-top: 0.35rem; }
+
+  header.row { border-top: 0; padding-top: 3.5rem; padding-bottom: 3rem; }
+  .name {
+    margin: 0;
+    font: 700 clamp(3rem, 9vw, 5.5rem)/0.95 var(--mono);
+    letter-spacing: -0.04em;
+  }
+  .lede { margin-top: 0.4rem; font-size: 1.25rem; line-height: 1.5; max-width: 34ch; }
+  .formats { color: var(--quiet); font-size: 0.95rem; }
+
+  /* The one bold thing: a table with the cursor resting on a row, as qrow shows it. */
+  .sheet {
+    width: 100%;
+    border-collapse: collapse;
+    font: 0.85rem/1.9 var(--mono);
+    font-variant-numeric: tabular-nums;
+  }
+  .sheet caption { text-align: left; color: var(--quiet); padding-bottom: 0.35rem; }
+  .sheet th, .sheet td { padding: 0 0.9rem 0 0; text-align: left; white-space: nowrap; }
+  .sheet th { color: var(--quiet); font-weight: 600; border-bottom: 1px solid var(--rule); }
+  .sheet td.n, .sheet th.n { text-align: right; }
+  .sheet tbody tr:nth-child(odd) { background: var(--band); }
+  .sheet tr.at { background: var(--cursor) !important; color: var(--paper); }
+  .sheet tr.at td:first-child::before { content: "▸ "; }
+  .sheet td:first-child { padding-left: 0.5rem; }
+  .sheet-wrap { overflow-x: auto; margin-top: 1.75rem; }
+  .status { margin-top: 0.4rem; font: 0.85rem/1.5 var(--mono); color: var(--quiet); }
+
+  ul.links { list-style: none; margin: 0; padding: 0; }
+  ul.links li { padding: 0.3rem 0; border-bottom: 1px dotted var(--rule); }
+  ul.links li:last-child { border-bottom: 0; }
+  details { margin-top: 1rem; }
+  summary { cursor: pointer; color: var(--link); }
+  .fp { word-break: break-all; }
+
+  footer { padding: 2rem max(1.5rem, calc((100vw - 64rem) / 2)); color: var(--quiet); font-size: 0.9rem; border-top: 1px solid var(--rule); }
+
+  @media (max-width: 46rem) {
+    .row { grid-template-columns: minmax(0, 1fr); padding-top: 1.75rem; padding-bottom: 1.75rem; }
+    header.row { padding-top: 2.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<header class="row">
+  <div></div>
+  <div>
+    <h1 class="name">qrow</h1>
+    <p class="lede">Query rows in tables, documents and databases — from the terminal or through an AI assistant.</p>
+    <p class="formats">CSV, TSV, JSON, JSONL, YAML, TOML, Markdown, Parquet, Arrow, Excel, SQLite and DuckDB. Large CSV, Parquet, Arrow and JSONL files are read as a stream, not loaded whole.</p>
+    <div class="sheet-wrap">
+      <table class="sheet">
+        <caption>qrow sales.csv</caption>
+        <thead>
+          <tr><th>region</th><th>product</th><th class="n">units</th><th class="n">revenue</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>North</td><td>Lamp</td><td class="n">120</td><td class="n">4 680.00</td></tr>
+          <tr><td>North</td><td>Desk</td><td class="n">34</td><td class="n">9 146.00</td></tr>
+          <tr class="at"><td>South</td><td>Chair</td><td class="n">210</td><td class="n">12 390.00</td></tr>
+          <tr><td>South</td><td>Lamp</td><td class="n">88</td><td class="n">3 432.00</td></tr>
+          <tr><td>West</td><td>Desk</td><td class="n">51</td><td class="n">13 719.00</td></tr>
+        </tbody>
+      </table>
+      <p class="status">row 3 of 5</p>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="row" id="install">
+    <h2>Install</h2>
+    <div>
+      <h3>Cargo</h3>
+      <pre><code>cargo install qrow</code></pre>
+
+      <h3>Homebrew (macOS, Linux)</h3>
+      <pre><code>brew tap denisotree/qrow
+brew install qrow</code></pre>
+
+      <h3>Arch Linux (AUR)</h3>
+      <pre><code>yay -S qrow        # or qrow-bin for the pre-built binary</code></pre>
+
+      <h3>Debian, Ubuntu (APT)</h3>
+      <pre><code>curl -fsSL https://qrow.dev/apt/qrow.gpg \
+  | sudo tee /usr/share/keyrings/qrow.gpg &gt; /dev/null
+echo "deb [signed-by=/usr/share/keyrings/qrow.gpg] https://qrow.dev/apt stable main" \
+  | sudo tee /etc/apt/sources.list.d/qrow.list
+sudo apt update &amp;&amp; sudo apt install qrow</code></pre>
+      <p style="margin-top:0.75rem">amd64 and arm64, Debian 12+ and Ubuntu 22.04+. Pre-built archives for Linux and macOS are on the <a href="https://github.com/denisotree/qrow/releases">releases page</a>. Every install brings two commands: <code>qrow</code> and the short <code>qrw</code>.</p>
+      <details>
+        <summary>The APT signing key</summary>
+        <p style="margin-top:0.75rem"><a href="https://qrow.dev/apt/qrow.gpg">qrow.dev/apt/qrow.gpg</a>, fingerprint<br><code class="fp">F1A1 0D49 EB64 0A0F 7C2E F9FD 3C84 7155 6244 EF39</code></p>
+      </details>
+    </div>
+  </section>
+
+  <section class="row" id="mcp">
+    <h2>AI assistants</h2>
+    <div>
+      <p>Started with <code>--mcp</code>, qrow is an MCP server: the assistant sends operations and reads back computed numbers instead of estimating them. <code>--mcp-write</code> also lets it change rows in SQLite and DuckDB, always as a planned change shown before it runs.</p>
+      <h3>Claude Code</h3>
+      <pre><code>claude mcp add -s user qrow -- qrow --mcp</code></pre>
+      <h3>Clients configured with JSON</h3>
+      <pre><code>{
+  "mcpServers": {
+    "qrow": {
+      "command": "/opt/homebrew/bin/qrow",
+      "args": ["--mcp"]
+    }
+  }
+}</code></pre>
+      <p style="margin-top:0.75rem">Use the full path: a desktop app does not start from your shell and may not see your <code>PATH</code>. <code>which qrow</code> prints yours.</p>
+    </div>
+  </section>
+
+  <section class="row" id="from-tuitab">
+    <h2>Coming from tuitab</h2>
+    <div>
+      <p>qrow is tuitab under a new name, from version 0.12.0. The commands <code>tuitab</code>, <code>ttab</code> and <code>ttb</code> are now <code>qrow</code> and <code>qrw</code>, and the MCP tools are <code>qrow_*</code>.</p>
+      <h3>Cargo</h3>
+      <pre><code>cargo uninstall tuitab &amp;&amp; cargo install qrow</code></pre>
+      <h3>Homebrew</h3>
+      <p><code>brew update &amp;&amp; brew upgrade</code> replaces tuitab with qrow by itself.</p>
+      <h3>AUR</h3>
+      <p>Install <code>qrow</code> or <code>qrow-bin</code>; pacman offers to replace the old package.</p>
+      <h3>APT</h3>
+      <p>The old repository stays at 0.11.1. Remove it, then add the new one as in Install above; installing qrow removes tuitab.</p>
+      <pre><code>sudo rm /etc/apt/sources.list.d/tuitab.list /usr/share/keyrings/tuitab.gpg</code></pre>
+      <h3>MCP</h3>
+      <pre><code>claude mcp remove -s user tuitab
+claude mcp add -s user qrow -- qrow --mcp</code></pre>
+      <p style="margin-top:0.75rem">Keep <code>--mcp-write</code> if you had it. Permission rules follow the server's name: <code>mcp__tuitab__tuitab_*</code> becomes <code>mcp__qrow__qrow_*</code>. In a JSON config, rename the key and the command to <code>qrow</code>.</p>
+    </div>
+  </section>
+
+  <section class="row" id="docs">
+    <h2>Documentation</h2>
+    <div>
+      <ul class="links">
+        <li><a href="https://github.com/denisotree/qrow">Source code and README</a></li>
+        <li><a href="https://github.com/denisotree/qrow/tree/master/docs/en">Guide in English</a></li>
+        <li><a href="https://github.com/denisotree/qrow/tree/master/docs/ru">Руководство на русском</a></li>
+        <li><a href="https://github.com/denisotree/qrow/blob/master/CHANGELOG.md">Changelog</a></li>
+      </ul>
+    </div>
+  </section>
+</main>
+
+<footer>qrow is open source under the Apache-2.0 license.</footer>
+
+</body>
+</html>
