@@ -9,8 +9,8 @@ pkgbase = qrow-bin
 	provides = qrow
 	conflicts = qrow
 	source_x86_64 = qrow-bin-1.0.0-x86_64.tar.gz::https://github.com/denisotree/qrow/releases/download/v1.0.0/qrow-v1.0.0-x86_64-unknown-linux-gnu.tar.gz
-	sha256sums_x86_64 = SKIP
+	sha256sums_x86_64 = 512e44c47a4056b3041a09a81a95dbb1d1df5447930f607ffad2426e181e421b
 	source_aarch64 = qrow-bin-1.0.0-aarch64.tar.gz::https://github.com/denisotree/qrow/releases/download/v1.0.0/qrow-v1.0.0-aarch64-unknown-linux-gnu.tar.gz
-	sha256sums_aarch64 = SKIP
+	sha256sums_aarch64 = dc27572085957c6fffcd20e9477a19b66c524a0a3f48440c188462fd959ac705
 
 pkgname = qrow-bin
