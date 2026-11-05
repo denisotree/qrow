@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.0] - 2026-11-05
+
 ### Breaking
 
 **qrow 1.0.0 is the first release of qrow, which continues tuitab.** The engine is the same,
@@ -1516,7 +1518,8 @@ versions follow 1.{update}.{patch}: a feature update raises the middle number, a
 - Non-English keyboard remapping
 - Three binary aliases: `tuitab`, `ttab`, `tt`
 
-[Unreleased]: https://github.com/denisotree/qrow/compare/v0.11.1...HEAD
+[Unreleased]: https://github.com/denisotree/qrow/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/denisotree/qrow/compare/v0.11.1...v1.0.0
 [0.11.1]: https://github.com/denisotree/tuitab/compare/v0.11.0...v0.11.1
 [0.11.0]: https://github.com/denisotree/tuitab/compare/v0.10.3...v0.11.0
 [0.10.3]: https://github.com/denisotree/tuitab/compare/v0.10.2...v0.10.3

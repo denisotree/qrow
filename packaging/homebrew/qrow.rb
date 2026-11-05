@@ -17,26 +17,26 @@ class Qrow < Formula
 
   on_macos do
     on_arm do
-      url "https://github.com/denisotree/qrow/releases/download/v0.12.0/qrow-v0.12.0-aarch64-apple-darwin.tar.gz"
-      sha256 "82b61aa84462320bc6488a502219b7781032e0c7b5430a24a668f51d1f28de94"
-      version "0.12.0"
+      url "https://github.com/denisotree/qrow/releases/download/v1.0.0/qrow-v1.0.0-aarch64-apple-darwin.tar.gz"
+      sha256 "FILL_IN_AFTER_RELEASE"
+      version "1.0.0"
     end
     on_intel do
-      url "https://github.com/denisotree/qrow/releases/download/v0.12.0/qrow-v0.12.0-x86_64-apple-darwin.tar.gz"
-      sha256 "411fd496f2924e51bbdfca68506e2d8aa0d1aa1f61e9ea2befe73976abf63af3"
-      version "0.12.0"
+      url "https://github.com/denisotree/qrow/releases/download/v1.0.0/qrow-v1.0.0-x86_64-apple-darwin.tar.gz"
+      sha256 "FILL_IN_AFTER_RELEASE"
+      version "1.0.0"
     end
   end
   on_linux do
     on_arm do
-      url "https://github.com/denisotree/qrow/releases/download/v0.12.0/qrow-v0.12.0-aarch64-unknown-linux-gnu.tar.gz"
-      sha256 "72370049089a3cff10ba73363b076b3b1f75e5a3c27c471d9dc1562f10b074f5"
-      version "0.12.0"
+      url "https://github.com/denisotree/qrow/releases/download/v1.0.0/qrow-v1.0.0-aarch64-unknown-linux-gnu.tar.gz"
+      sha256 "FILL_IN_AFTER_RELEASE"
+      version "1.0.0"
     end
     on_intel do
-      url "https://github.com/denisotree/qrow/releases/download/v0.12.0/qrow-v0.12.0-x86_64-unknown-linux-gnu.tar.gz"
-      sha256 "1fd8e1327c39a162e54ef5ee66f691f3bfd54ffc6a2f639185957999a0934d5e"
-      version "0.12.0"
+      url "https://github.com/denisotree/qrow/releases/download/v1.0.0/qrow-v1.0.0-x86_64-unknown-linux-gnu.tar.gz"
+      sha256 "FILL_IN_AFTER_RELEASE"
+      version "1.0.0"
     end
   end
 
