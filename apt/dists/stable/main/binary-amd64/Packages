@@ -1,0 +1,81 @@
+Package: qrow
+Architecture: amd64
+Version: 1.0.0-1
+Priority: optional
+Section: utils
+Maintainer: denisotree <denisotree@users.noreply.github.com>
+Installed-Size: 134089
+Depends: libc6 (>= 2.34), libstdc++6 (>= 12)
+Filename: pool/main/q/qrow/qrow_1.0.0-1_amd64.deb
+Size: 30098408
+MD5sum: a604c466c39597c7993b70af70792ca2
+SHA1: 58a227f293d11fcd9fdf3e2f9ee4806bd4546d4e
+SHA256: c506c74bc47ad54ed20a0cd9242186ee7e81f884306602c26717f34ad04e4164
+SHA512: cea553392bb4be81bb784600a6e77f92c805fe404725038e0b0c20da7cbe6afe70bbf5bc7c09a23f5097756de23d81d4faf0c7219f81d7c441e484453214898d
+Homepage: https://qrow.dev
+Description: Query rows in tables, documents and databases from the terminal — CSV, JSON,
+ YAML, TOML, Parquet, Excel, SQLite, DuckDB — with an MCP server that lets AI
+ assistants compute over the same files
+ A fast, keyboard-driven terminal viewer for tables, documents and databases,
+ with an MCP server that lets AI assistants compute over the same files. Reads
+ CSV, TSV, JSON, JSONL, YAML, TOML, Markdown, Parquet, Arrow, Excel, SQLite and
+ DuckDB. Filtering, sorting, pivot tables, joins, computed columns, statistics
+ and charts. JSON, YAML and TOML open as a table over the parsed document, so
+ nested data can be browsed, edited and converted between formats. Installs
+ `qrow` and the short alias `qrw`. qrow continues tuitab, which stays at
+ 0.11.1 and installs side by side with it.
+
+Package: qrow
+Architecture: amd64
+Version: 1.1.0-1
+Priority: optional
+Section: utils
+Maintainer: denisotree <denisotree@users.noreply.github.com>
+Installed-Size: 138832
+Depends: libc6 (>= 2.34), libstdc++6 (>= 12)
+Filename: pool/main/q/qrow/qrow_1.1.0-1_amd64.deb
+Size: 31076628
+MD5sum: 6f9177b4461c4a52d8e07f43c5db256c
+SHA1: 3e28a8f9f2b00bf8379601ff028a937df0262350
+SHA256: 4c5a419c5c1ed1e3e5b7bd6c97d827890984cc7f8b74f101bcf24fdc380fc79c
+SHA512: c6939bccfddf0c8d413912cf685db452fc58a455c74f853477b3db8696007a901575f3bef4899e6b8ac98e8445d886768d8edfddd0a1770b49692763a61470d9
+Homepage: https://qrow.dev
+Description: Query rows in tables, documents and databases from the terminal — CSV, JSON,
+ YAML, TOML, Parquet, Excel, SQLite, DuckDB — with an MCP server that lets AI
+ assistants compute over the same files
+ A fast, keyboard-driven terminal viewer for tables, documents and databases,
+ with an MCP server that lets AI assistants compute over the same files. Reads
+ CSV, TSV, JSON, JSONL, YAML, TOML, Markdown, Parquet, Arrow, Excel, SQLite and
+ DuckDB. Filtering, sorting, pivot tables, joins, computed columns, statistics
+ and charts. JSON, YAML and TOML open as a table over the parsed document, so
+ nested data can be browsed, edited and converted between formats. Installs
+ `qrow` and the short alias `qrw`. qrow continues tuitab, which stays at
+ 0.11.1 and installs side by side with it.
+
+Package: qrow
+Architecture: amd64
+Version: 1.1.1-1
+Priority: optional
+Section: utils
+Maintainer: denisotree <denisotree@users.noreply.github.com>
+Installed-Size: 138832
+Depends: libc6 (>= 2.34), libstdc++6 (>= 12)
+Filename: pool/main/q/qrow/qrow_1.1.1-1_amd64.deb
+Size: 31070956
+MD5sum: 938516d85b3ec3f21b23e1c7b5324020
+SHA1: 0d54cea3b3c4a33500e2d17d68c062f43cabceee
+SHA256: 712974e27328996fe4c632bd47f6f79827c58cc7a18fb08f4fb6469f75225337
+SHA512: 329ee5f05e9e58f2d0982429354425774e020b43bc5e7621d4648a4c8d16f69ca9c21293e7fff93e7a6e77ba46864c9a66c39230e135334a8a13125646ebf7ca
+Homepage: https://qrow.dev
+Description: Query rows in tables, documents and databases from the terminal — CSV, JSON,
+ YAML, TOML, Parquet, Excel, SQLite, DuckDB — with an MCP server that lets AI
+ assistants compute over the same files
+ A fast, keyboard-driven terminal viewer for tables, documents and databases,
+ with an MCP server that lets AI assistants compute over the same files. Reads
+ CSV, TSV, JSON, JSONL, YAML, TOML, Markdown, Parquet, Arrow, Excel, SQLite and
+ DuckDB. Filtering, sorting, pivot tables, joins, computed columns, statistics
+ and charts. JSON, YAML and TOML open as a table over the parsed document, so
+ nested data can be browsed, edited and converted between formats. Installs
+ `qrow` and the short alias `qrw`. qrow continues tuitab, which stays at
+ 0.11.1 and installs side by side with it.
+
