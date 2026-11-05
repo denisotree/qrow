@@ -81,4 +81,5 @@ pub fn collect(
     lf: polars::prelude::LazyFrame,
 ) -> polars::prelude::PolarsResult<polars::prelude::DataFrame> {
     lf.collect_with_engine(polars::prelude::Engine::Streaming)
+        .map(|result| result.unwrap_single())
 }

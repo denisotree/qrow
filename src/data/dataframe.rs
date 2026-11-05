@@ -87,7 +87,7 @@ pub(crate) fn json_text(c: Column, json: bool) -> PolarsResult<Column> {
     if c.dtype() == &DataType::String {
         let quoted: StringChunked = c
             .str()?
-            .into_iter()
+            .iter()
             .map(|v| v.map(|s| serde_json::Value::from(s).to_string()))
             .collect();
         return Ok(quoted.with_name(c.name().clone()).into_column());
@@ -504,7 +504,7 @@ impl DataFrame {
         let mut builder =
             polars::prelude::StringChunkedBuilder::new(series_name.clone(), str_ca.len());
         let write_null = value == NULL_INPUT && self.db_rows.is_some();
-        for (i, opt_s) in str_ca.into_iter().enumerate() {
+        for (i, opt_s) in str_ca.iter().enumerate() {
             if i == physical_row {
                 if write_null {
                     builder.append_null();
@@ -558,7 +558,7 @@ impl DataFrame {
         let mut builder = polars::prelude::StringChunkedBuilder::new(series_name, str_ca.len());
         let write_null = parsed_val == NULL_INPUT && self.db_rows.is_some();
         let mut updated = 0usize;
-        for (i, opt_s) in str_ca.into_iter().enumerate() {
+        for (i, opt_s) in str_ca.iter().enumerate() {
             if physical_rows.contains(&i) {
                 if write_null {
                     builder.append_null();
@@ -912,10 +912,7 @@ impl DataFrame {
     /// Returns true if the string series contains at least one value ending with `%`.
     fn series_looks_like_percent(series: &polars::prelude::Column) -> bool {
         if let Ok(str_ca) = series.str() {
-            str_ca
-                .into_iter()
-                .flatten()
-                .any(|s| s.trim().ends_with('%'))
+            str_ca.iter().flatten().any(|s| s.trim().ends_with('%'))
         } else {
             false
         }
@@ -985,10 +982,8 @@ impl DataFrame {
             // Save backup strings so Datetime can be restored later
             if let Ok(str_series) = series.cast(&polars::prelude::DataType::String) {
                 if let Ok(str_ca) = str_series.str() {
-                    let backup: Vec<Option<String>> = str_ca
-                        .into_iter()
-                        .map(|s| s.map(|x| x.to_string()))
-                        .collect();
+                    let backup: Vec<Option<String>> =
+                        str_ca.iter().map(|s| s.map(|x| x.to_string())).collect();
                     self.columns[col_idx].backup_datetime_str = Some(backup);
                 }
             }
@@ -1048,7 +1043,7 @@ impl DataFrame {
         let str_ca = series.str().map_err(|e| e.to_string())?;
         let mut builder =
             polars::prelude::BooleanChunkedBuilder::new(series.name().clone(), str_ca.len());
-        for opt_s in str_ca.into_iter() {
+        for opt_s in str_ca.iter() {
             if let Some(s) = opt_s {
                 let lower = s.trim().to_lowercase();
                 if lower == "true" || lower == "1" || lower == "yes" {
@@ -1072,7 +1067,7 @@ impl DataFrame {
     ) -> Result<polars::prelude::Column, String> {
         let str_ca = series.str().map_err(|e| e.to_string())?;
         let vals: Vec<Option<f64>> = str_ca
-            .into_iter()
+            .iter()
             .map(|opt_s| {
                 opt_s.and_then(|s| {
                     let cleaned: String = s
@@ -1095,7 +1090,7 @@ impl DataFrame {
         let epoch = NaiveDate::from_ymd_opt(1970, 1, 1).unwrap();
         let str_ca = series.str().map_err(|e| e.to_string())?;
         let days: Vec<Option<i32>> = str_ca
-            .into_iter()
+            .iter()
             .map(|opt_s| {
                 let s = opt_s?.trim();
                 if let Ok(d) = NaiveDate::parse_from_str(s, "%Y-%m-%d") {
@@ -1125,7 +1120,7 @@ impl DataFrame {
             .unwrap();
         let str_ca = series.str().map_err(|e| e.to_string())?;
         let micros: Vec<Option<i64>> = str_ca
-            .into_iter()
+            .iter()
             .map(|opt_s| {
                 let s = opt_s?.trim();
                 for fmt in crate::data::DATETIME_FORMATS {
@@ -1197,7 +1192,7 @@ impl DataFrame {
         match col_type {
             ColumnType::Percentage => {
                 let vals: Vec<Option<f64>> = str_ca
-                    .into_iter()
+                    .iter()
                     .map(|opt| {
                         opt.and_then(|s| s.trim().trim_end_matches('%').parse::<f64>().ok())
                             .map(|f| f / 100.0)
@@ -1207,14 +1202,14 @@ impl DataFrame {
             }
             ColumnType::Float => {
                 let vals: Vec<Option<f64>> = str_ca
-                    .into_iter()
+                    .iter()
                     .map(|opt| opt.and_then(|s| s.trim().trim_end_matches('%').parse::<f64>().ok()))
                     .collect();
                 Ok(Column::from(Series::new(series.name().clone(), vals)))
             }
             ColumnType::Integer => {
                 let vals: Vec<Option<i64>> = str_ca
-                    .into_iter()
+                    .iter()
                     .map(|opt| {
                         opt.and_then(|s| s.trim().trim_end_matches('%').parse::<f64>().ok())
                             .map(|f| f.round() as i64)
@@ -1921,7 +1916,7 @@ impl DataFrame {
 
         match str_ca.contains(pattern, false) {
             Ok(mask) => mask
-                .into_iter()
+                .iter()
                 .enumerate()
                 .filter_map(|(i, opt_b)| {
                     if opt_b.unwrap_or(false) {
@@ -1962,7 +1957,7 @@ impl DataFrame {
         };
 
         str_ca
-            .into_iter()
+            .iter()
             .enumerate()
             .filter_map(
                 |(i, opt_s)| {
@@ -2324,10 +2319,29 @@ impl DataFrame {
             .collect()
             .map_err(|e| format!("Pivot grouping error: {}", e))?;
 
-        // 2. Pivot the result using LazyFrame::pivot (polars ≥0.53 API)
+        // 2. Pivot the result using LazyFrame::pivot.
+        // Polars (0.55) resolves the pivot's column names as expressions, so a name
+        // shaped like a regex (`^total$`) would be matched as one and the index would
+        // silently vanish. The pivot therefore runs on placeholder names, and the index
+        // columns get their real names back afterwards.
+        const PIVOT_ON: &str = "__qrow_pivot_on";
+        let placeholder = |i: usize| format!("__qrow_pivot_index_{}", i);
+        let mut from: Vec<String> = row_index_cols.to_vec();
+        let mut to: Vec<String> = (0..row_index_cols.len()).map(placeholder).collect();
+        if !row_index_cols.iter().any(|c| c == pivot_col) {
+            from.push(pivot_col.to_string());
+            to.push(PIVOT_ON.to_string());
+        }
+        let on_name = to[from.iter().position(|c| c == pivot_col).unwrap_or(0)].clone();
+        let grouped = grouped
+            .lazy()
+            .rename(from.iter(), to.iter(), true)
+            .collect()
+            .map_err(|e| format!("Pivot error: {}", e))?;
+
         // on_columns must be a DataFrame of unique pivot column values
         let pivot_series = grouped
-            .column(pivot_col)
+            .column(&on_name)
             .map_err(|e| e.to_string())?
             .as_materialized_series()
             .clone();
@@ -2336,18 +2350,16 @@ impl DataFrame {
             DataFrame::new_infer_height(vec![unique_vals.into()]).map_err(|e| e.to_string())?,
         );
 
-        let index_names: Arc<[PlSmallStr]> = row_index_cols
-            .iter()
-            .map(|s| PlSmallStr::from(s.as_str()))
+        let index_names: Arc<[PlSmallStr]> = (0..row_index_cols.len())
+            .map(|i| PlSmallStr::from(placeholder(i)))
             .collect::<Vec<_>>()
             .into();
 
         let pivoted = grouped
-            .clone()
             .lazy()
             .pivot(
                 Selector::ByName {
-                    names: Arc::from([PlSmallStr::from(pivot_col)]),
+                    names: Arc::from([PlSmallStr::from(on_name.as_str())]),
                     strict: true,
                 },
                 on_columns_df,
@@ -2362,6 +2374,12 @@ impl DataFrame {
                 element().first(),
                 true,
                 "_".into(),
+                polars::frame::PivotColumnNaming::Auto,
+            )
+            .rename(
+                (0..row_index_cols.len()).map(placeholder),
+                row_index_cols.iter(),
+                true,
             )
             .collect()
             .map_err(|e| format!("Pivot error: {}", e))?;

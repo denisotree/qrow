@@ -771,7 +771,7 @@ impl Expr {
                 }
                 let s = polars::prelude::Series::from_any_values("".into(), &polars_list, true)
                     .map_err(|e| e.to_string())?;
-                Ok(l.is_in(polars::lazy::dsl::lit(s).implode(), false))
+                Ok(l.is_in(polars::lazy::dsl::lit(s).implode(true), false))
             }
             Expr::If {
                 cond,
@@ -2517,13 +2517,7 @@ mod tests {
                 .alias("m")])
             .collect()
             .expect("must evaluate");
-        let fast: Vec<Option<f64>> = fast
-            .column("m")
-            .unwrap()
-            .f64()
-            .unwrap()
-            .into_iter()
-            .collect();
+        let fast: Vec<Option<f64>> = fast.column("m").unwrap().f64().unwrap().iter().collect();
         let slow: Vec<Option<f64>> = (0..values.len())
             .map(|row| match parsed.eval(row, &lookup, &df) {
                 Value::Number(n) => Some(n),
@@ -2787,7 +2781,7 @@ mod tests {
             .unwrap()
             .str()
             .unwrap()
-            .into_iter()
+            .iter()
             .map(|v| v.map(str::to_string))
             .collect();
         let slow: Vec<Option<String>> = (0..values.len())

@@ -16,7 +16,7 @@ fn trimmed(name: &str) -> Expr {
 
 fn is_token(x: Expr) -> Expr {
     x.is_in(
-        lit(Series::new("tokens".into(), NULL_TOKENS)).implode(),
+        lit(Series::new("tokens".into(), NULL_TOKENS)).implode(true),
         false,
     )
 }

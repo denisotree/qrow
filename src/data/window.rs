@@ -358,7 +358,7 @@ pub fn add_window_column(df: &DataFrame, spec: &Spec) -> Result<DataFrame, Strin
             .iter()
             .map(|s| crate::data::column_expr(s))
             .collect();
-        computed.over(partitions)
+        computed.over(partitions).map_err(|e| e.to_string())?
     }
     .alias(name.as_str());
 

@@ -39,13 +39,7 @@ fn keys(k: &[&str]) -> Vec<String> {
 }
 
 fn id_column(df: &DataFrame) -> Vec<Option<i64>> {
-    df.df
-        .column("id")
-        .unwrap()
-        .i64()
-        .unwrap()
-        .into_iter()
-        .collect()
+    df.df.column("id").unwrap().i64().unwrap().iter().collect()
 }
 
 #[test]
@@ -242,7 +236,7 @@ fn strings(df: &DataFrame, name: &str) -> Vec<Option<String>> {
     let c = df.df.column(name).unwrap().cast(&DataType::String).unwrap();
     c.str()
         .unwrap()
-        .into_iter()
+        .iter()
         .map(|v| v.map(str::to_string))
         .collect()
 }
@@ -489,7 +483,7 @@ fn chained_joins_keep_column_names_unique() {
         .unwrap()
         .str()
         .unwrap()
-        .into_iter()
+        .iter()
         .collect();
     assert_eq!(from_c, vec![Some("c1"), Some("c2")]);
 }

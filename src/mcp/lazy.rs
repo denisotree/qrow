@@ -813,7 +813,7 @@ fn guard(lf: &LazyFrame, step: &str, budget: u64) -> Result<(), Guard> {
             DataType::String => {
                 let total: u64 = column
                     .str()
-                    .map(|ca| ca.into_iter().flatten().map(|s| s.len() as u64).sum())
+                    .map(|ca| ca.iter().flatten().map(|s| s.len() as u64).sum())
                     .unwrap_or(0);
                 total / sample.height().max(1) as u64 + 16
             }

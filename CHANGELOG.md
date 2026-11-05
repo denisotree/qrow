@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Polars 0.53 → 0.55. Along the way: rusqlite 0.41, crossterm 0.29, rust_xlsxwriter 0.102,
+  jaq-std 3.0.4.
+
+### Fixed
+
+- The API documentation on docs.rs builds again. It failed twice over: Polars 0.53 turns
+  on nightly-only code under the nightly compiler docs.rs uses, and that code no longer
+  compiles there; and compiling the bundled DuckDB ran past docs.rs's memory limit, so the
+  docs are now built without it.
+
 ## [1.0.0] - 2026-11-05
 
 ### Breaking

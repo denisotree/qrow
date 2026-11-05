@@ -216,7 +216,7 @@ const RIGHT_ROW: &str = "__qrow_diff_right_row";
 pub fn diff_counts(df: &DataFrame) -> [usize; 4] {
     let mut counts = [0; 4];
     if let Ok(status) = df.df.column(DIFF_COL).and_then(|c| c.str().cloned()) {
-        for s in status.into_iter().flatten() {
+        for s in status.iter().flatten() {
             if let Some(i) = ["=", "~", "-", "+"].iter().position(|k| *k == s) {
                 counts[i] += 1;
             }

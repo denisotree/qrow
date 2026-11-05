@@ -447,7 +447,7 @@ pub fn select_rows(df: &DataFrame, expr: &Expr, fallback: Fallback) -> Result<Ve
                 }
 
                 return Ok(mask
-                    .into_iter()
+                    .iter()
                     .enumerate()
                     .filter(|(_, hit)| hit.unwrap_or(false))
                     .map(|(i, _)| i)

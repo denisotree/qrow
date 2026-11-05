@@ -1296,7 +1296,7 @@ fn numbers_of(df: &crate::data::dataframe::DataFrame, col: &str) -> Result<Vec<f
     Ok(floats
         .f64()
         .map_err(|e| e.to_string())?
-        .into_iter()
+        .iter()
         .flatten()
         .filter(|v| v.is_finite())
         .collect())

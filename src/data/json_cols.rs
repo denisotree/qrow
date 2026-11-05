@@ -93,7 +93,7 @@ pub fn expand_json(df: &DataFrame, col: &str, prefix: &str) -> Result<DataFrame,
         .as_materialized_series()
         .cast(&DataType::String)
         .map_err(|e| e.to_string())?;
-    let cells: Vec<Option<&str>> = text.str().map_err(|e| e.to_string())?.into_iter().collect();
+    let cells: Vec<Option<&str>> = text.str().map_err(|e| e.to_string())?.iter().collect();
 
     let parsed: Vec<Option<serde_json::Map<String, Json>>> = cells
         .par_iter()
