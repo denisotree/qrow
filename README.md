@@ -393,7 +393,13 @@ and `ttb` are now `qrow` and `qrw`; the MCP server is `qrow` and its tools are
 0.11.1 and earlier.
 
 - **Cargo:** `cargo uninstall tuitab && cargo install qrow`.
-- **Homebrew:** `brew update && brew upgrade` replaces tuitab with qrow by itself.
+- **Homebrew:** the tap is renamed to `denisotree/qrow` and the formula to `qrow` on the
+  next `brew update`. Homebrew only upgrades from a tap you trust, so trust the renamed
+  one once, then upgrade:
+
+  ```sh
+  brew update && brew trust denisotree/qrow && brew upgrade
+  ```
 - **AUR:** install `qrow` or `qrow-bin`; pacman offers to replace `tuitab` or
   `tuitab-bin`.
 - **APT:** the old repository stays at 0.11.1 and gets no updates. Remove it, add the

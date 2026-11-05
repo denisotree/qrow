@@ -30,8 +30,9 @@ tuitab is now **qrow**. The program is the same; its name, commands and addresse
   at 0.11.1. Replace the source list once —
   `sudo rm /etc/apt/sources.list.d/tuitab.list /usr/share/keyrings/tuitab.gpg`, then
   the commands in the README — and `apt install qrow` removes `tuitab`.
-- Homebrew moves an installed `tuitab` to `qrow` on `brew upgrade`; on the AUR, `qrow`
-  and `qrow-bin` replace `tuitab` and `tuitab-bin`. The `tuitab` crate's last version
+- Homebrew renames the tap to `denisotree/qrow` and moves an installed `tuitab` to `qrow`
+  once the renamed tap is trusted: `brew update && brew trust denisotree/qrow && brew
+  upgrade`. On the AUR, `qrow` and `qrow-bin` replace `tuitab` and `tuitab-bin`. The `tuitab` crate's last version
   only says where it went.
 
 ### Fixed

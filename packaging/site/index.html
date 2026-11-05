@@ -225,8 +225,9 @@ sudo apt update &amp;&amp; sudo apt install qrow</code></pre></div>
     <h3>cargo</h3>
     <div class="code"><pre><code>cargo uninstall tuitab &amp;&amp; cargo install qrow</code></pre></div>
 
-    <h3>homebrew <small>automatic</small></h3>
-    <div class="code"><pre><code>brew update &amp;&amp; brew upgrade</code></pre></div>
+    <h3>homebrew</h3>
+    <p>The tap and the formula are renamed for you; Homebrew upgrades only from a tap you trust, so trust the renamed one once.</p>
+    <div class="code"><pre><code>brew update &amp;&amp; brew trust denisotree/qrow &amp;&amp; brew upgrade</code></pre></div>
 
     <h3>aur</h3>
     <p>Install <code>qrow</code> or <code>qrow-bin</code>; pacman offers to remove the old package.</p>

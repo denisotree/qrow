@@ -32,3 +32,16 @@ fn the_notes_do_not_untap_the_old_tap() {
         );
     }
 }
+
+/// Homebrew renames the tap to denisotree/qrow by itself, but a tuitab installed by
+/// its full name trusted only that formula: `brew upgrade` then skips the untrusted
+/// renamed tap without a word.  The notes must name the trust step.
+#[test]
+fn the_homebrew_note_trusts_the_renamed_tap() {
+    for path in NOTES {
+        assert!(
+            read(path).contains("brew trust denisotree/qrow"),
+            "{path} leaves Homebrew users on tuitab"
+        );
+    }
+}
