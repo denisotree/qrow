@@ -7,33 +7,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [0.12.0] - 2026-11-05
-
 ### Breaking
 
-tuitab is now **qrow**. The program is the same; its name, commands and addresses change.
+**qrow 1.0.0 is the first release of qrow, which continues tuitab.** The engine is the same,
+developed further under a new name. tuitab stays available at 0.11.1 on every channel as a
+separate product and gets no further releases; the two install side by side. From here the
+versions follow 1.{update}.{patch}: a feature update raises the middle number, a fix the last.
 
-- The crate is `qrow` and the commands are `qrow` and its short alias `qrw`. `tuitab`,
-  `ttab` and `ttb` are gone, with no transition period (`ttab` also collided with
-  mklement0/ttab, a macOS tool). The `aliases` feature now builds `qrw`;
-  `cargo binstall qrow` installs `qrow` alone.
+- The crate is `qrow` and the commands are `qrow` and its short alias `qrw` (tuitab's
+  `ttab` also collided with mklement0/ttab, a macOS tool). The `aliases` feature builds
+  `qrw`; `cargo binstall qrow` installs `qrow` alone.
 - The MCP server reports itself as `qrow`, and its tools are `qrow_inspect`,
   `qrow_query`, `qrow_describe`, `qrow_jq`, `qrow_calc`, `qrow_write` and
-  `qrow_write_apply`. Re-register it — `claude mcp remove tuitab && claude mcp add -s
-  user qrow -- qrow --mcp`, adding `--mcp-write` if you had it — and rename permission
-  rules: `mcp__tuitab__tuitab_query` becomes `mcp__qrow__qrow_query`, `mcp__tuitab`
-  becomes `mcp__qrow`.
+  `qrow_write_apply`. Register it — `claude mcp add -s user qrow -- qrow --mcp`, adding
+  `--mcp-write` if you want writes — and rename permission rules:
+  `mcp__tuitab__tuitab_query` becomes `mcp__qrow__qrow_query`, `mcp__tuitab` becomes
+  `mcp__qrow`.
 - The repository is [denisotree/qrow](https://github.com/denisotree/qrow) and the site
   [qrow.dev](https://qrow.dev). [denisotree/tuitab](https://github.com/denisotree/tuitab)
-  stays as the archive of 0.11.1 and earlier.
-- APT moves to `https://qrow.dev/apt` with the key `qrow.gpg`; the old repository stays
-  at 0.11.1. Replace the source list once —
-  `sudo rm /etc/apt/sources.list.d/tuitab.list /usr/share/keyrings/tuitab.gpg`, then
-  the commands in the README — and `apt install qrow` removes `tuitab`.
-- Homebrew renames the tap to `denisotree/qrow` and moves an installed `tuitab` to `qrow`
-  once the renamed tap is trusted: `brew update && brew trust denisotree/qrow && brew
-  upgrade`. On the AUR, `qrow` and `qrow-bin` replace `tuitab` and `tuitab-bin`. The `tuitab` crate's last version
-  only says where it went.
+  keeps tuitab 0.11.1 and earlier.
+- Packages: crates.io `qrow`; Homebrew `brew install denisotree/qrow/qrow` (its own tap);
+  AUR `qrow` and `qrow-bin`; APT at `https://qrow.dev/apt` with the key `qrow.gpg`. None
+  of them touches tuitab — install qrow side by side, and remove tuitab when you want.
 
 ### Fixed
 
@@ -46,15 +41,11 @@ tuitab is now **qrow**. The program is the same; its name, commands and addresse
 
 ### Notice
 
-- **tuitab becomes qrow in 0.12.0; this is the last release under the name tuitab.**
-  The commands become `qrow` and `qrw` (`tuitab`, `ttab` and `ttb` go away), the MCP
-  server and its tools become `qrow` and `qrow_*` — an MCP client's config and tool
-  permissions need the new names — and the repository moves to `denisotree/qrow`.
-  Homebrew moves an installed `tuitab` to `qrow` on upgrade; on the AUR `qrow` and
-  `qrow-bin` replace `tuitab` and `tuitab-bin`. The APT repository moves to
-  `https://qrow.dev/apt`: after the move `apt update` warns that the old address is
-  gone, the installed `tuitab` keeps working, and one change to the source list —
-  described in the 0.12.0 notes and on qrow.dev — brings `qrow` in its place.
+- **tuitab stays at 0.11.1; development continues as the separate project qrow.**
+  This release remains available on every channel and keeps working. qrow starts at
+  1.0.0 with the same engine, the commands `qrow` and `qrw` and the MCP tools `qrow_*`;
+  it installs side by side with tuitab. See https://github.com/denisotree/qrow and
+  https://qrow.dev.
 
 ### Added
 
@@ -1525,8 +1516,7 @@ tuitab is now **qrow**. The program is the same; its name, commands and addresse
 - Non-English keyboard remapping
 - Three binary aliases: `tuitab`, `ttab`, `tt`
 
-[Unreleased]: https://github.com/denisotree/qrow/compare/v0.12.0...HEAD
-[0.12.0]: https://github.com/denisotree/qrow/compare/v0.11.1...v0.12.0
+[Unreleased]: https://github.com/denisotree/qrow/compare/v0.11.1...HEAD
 [0.11.1]: https://github.com/denisotree/tuitab/compare/v0.11.0...v0.11.1
 [0.11.0]: https://github.com/denisotree/tuitab/compare/v0.10.3...v0.11.0
 [0.10.3]: https://github.com/denisotree/tuitab/compare/v0.10.2...v0.10.3

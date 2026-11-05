@@ -6,7 +6,7 @@ SQLite · DuckDB**.
 
 > 🇷🇺 Эта документация также доступна на [русском языке](../ru/README.md).
 
-> qrow was called tuitab until 0.12.0 — see
+> qrow continues tuitab, which stays at 0.11.1 — see
 > [Coming from tuitab](../../README.md#coming-from-tuitab) to move an existing install.
 
 ## Contents

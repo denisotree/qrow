@@ -33,15 +33,57 @@ fn the_notes_do_not_untap_the_old_tap() {
     }
 }
 
-/// Homebrew renames the tap to denisotree/qrow by itself, but a tuitab installed by
-/// its full name trusted only that formula: `brew upgrade` then skips the untrusted
-/// renamed tap without a word.  The notes must name the trust step.
+/// tuitab stays available at 0.11.1 as its own product, so the notes describe qrow as
+/// something installed next to it, not over it.
 #[test]
-fn the_homebrew_note_trusts_the_renamed_tap() {
+fn the_notes_install_qrow_beside_tuitab() {
     for path in NOTES {
+        let text = read(path);
         assert!(
-            read(path).contains("brew trust denisotree/qrow"),
-            "{path} leaves Homebrew users on tuitab"
+            text.contains("side by side"),
+            "{path} does not say both can stay"
+        );
+        assert!(
+            !text.contains("removes `tuitab`") && !text.contains("replaces tuitab"),
+            "{path} still says qrow takes tuitab's place"
         );
     }
+}
+
+/// qrow has its own tap; the renamed-tap path (formula_renames, brew trust) is gone.
+#[test]
+fn the_homebrew_note_installs_from_the_qrow_tap() {
+    for path in NOTES {
+        let text = read(path);
+        assert!(
+            text.contains("brew install denisotree/qrow/qrow"),
+            "{path} has no Homebrew command for qrow"
+        );
+        assert!(!text.contains("brew trust denisotree/qrow"), "{path}");
+    }
+}
+
+/// Installing qrow must not remove tuitab: the binaries differ, so no package
+/// declares a conflict with it or replaces it.
+#[test]
+fn qrow_packages_do_not_replace_tuitab() {
+    for path in [
+        "Cargo.toml",
+        "packaging/debian/control",
+        "packaging/aur/PKGBUILD",
+        "packaging/aur/PKGBUILD-bin",
+        "packaging/aur/.SRCINFO",
+        "packaging/aur/.SRCINFO-bin",
+    ] {
+        for line in read(path).lines() {
+            let l = line.to_lowercase();
+            assert!(
+                !((l.contains("conflicts") || l.contains("replaces")) && l.contains("tuitab")),
+                "{path}: {line}"
+            );
+        }
+    }
+    assert!(!std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+        .join("packaging/homebrew/formula_renames.json")
+        .exists());
 }

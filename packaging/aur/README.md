@@ -10,14 +10,11 @@ Two AUR packages are built from this directory:
 AUR reads `.SRCINFO`, not `PKGBUILD`, so both are copied together. `-bin` files
 go in as plain `PKGBUILD` and `.SRCINFO`.
 
-## Coming from tuitab
+## Next to tuitab
 
-`qrow` and `qrow-bin` declare `conflicts` with `tuitab` and `tuitab-bin`, the same
-program under its former name, so installing one asks to remove the old package.
-`replaces` is there too, but pacman only acts on it for packages from a sync
-repository, not for AUR builds. The old AUR packages are merged into the new ones with a merge
-request (https://aur.archlinux.org/pkgbase/tuitab/request → Merge into `qrow`,
-and the same for `tuitab-bin` → `qrow-bin`).
+tuitab, which qrow continues, stays on the AUR at 0.11.1 (`tuitab`, `tuitab-bin`). The
+binaries differ (`tuitab`, `ttab`, `ttb` against `qrow`, `qrw`), so the packages do not
+conflict and install side by side.
 
 ## Publishing a release
 

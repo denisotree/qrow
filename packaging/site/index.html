@@ -143,7 +143,7 @@ footer .lic{color:var(--muted)}
   <section class="hero" aria-labelledby="title">
     <h1 id="title">qrow</h1>
     <p class="lede">Query rows in tables, documents and databases — from the terminal or through an AI assistant.</p>
-    <p class="meta">Written in Rust, Apache-2.0, by one developer. Formerly called tuitab.</p>
+    <p class="meta">Written in Rust, Apache-2.0, by one developer. Continues tuitab.</p>
 
     <figure class="pane" style="margin-top:2.5rem" aria-label="Terminal interface showing sales.csv with the cursor on row 3 of 5">
       <span class="pt" aria-hidden="true">./sales.csv [1/1]</span>
@@ -220,25 +220,24 @@ sudo apt update &amp;&amp; sudo apt install qrow</code></pre></div>
 
   <section class="pane quiet" id="tuitab" aria-labelledby="tuitab-h">
     <h2 id="tuitab-h">coming from tuitab</h2>
-    <p class="muted" style="color:var(--muted)">tuitab was renamed to qrow in 0.12.0.</p>
+    <p class="muted" style="color:var(--muted)">qrow continues tuitab, which stays at 0.11.1 and keeps working. The two install side by side; remove tuitab when you no longer need it.</p>
 
     <h3>cargo</h3>
-    <div class="code"><pre><code>cargo uninstall tuitab &amp;&amp; cargo install qrow</code></pre></div>
+    <div class="code"><pre><code>cargo install qrow</code></pre></div>
 
-    <h3>homebrew</h3>
-    <p>The tap and the formula are renamed for you; Homebrew upgrades only from a tap you trust, so trust the renamed one once.</p>
-    <div class="code"><pre><code>brew update &amp;&amp; brew trust denisotree/qrow &amp;&amp; brew upgrade</code></pre></div>
+    <h3>homebrew <small>own tap</small></h3>
+    <div class="code"><pre><code>brew install denisotree/qrow/qrow</code></pre></div>
 
     <h3>aur</h3>
-    <p>Install <code>qrow</code> or <code>qrow-bin</code>; pacman offers to remove the old package.</p>
+    <p>Install <code>qrow</code> or <code>qrow-bin</code>; <code>tuitab</code> can stay or go.</p>
 
     <h3>apt</h3>
-    <p>The old repository stays at 0.11.1. Remove it, then <a href="#install">add the new one</a>:</p>
+    <p><a href="#install">Add the qrow repository</a> and install qrow. The tuitab repository stays at 0.11.1; to remove it:</p>
     <div class="code"><pre><code>sudo rm /etc/apt/sources.list.d/tuitab.list /usr/share/keyrings/tuitab.gpg</code></pre></div>
 
     <h3>mcp</h3>
     <div class="code"><pre><code>claude mcp remove tuitab</code></pre></div>
-    <p>Then add qrow as above, with <code>--mcp-write</code> if you had it. Permission rules follow the server's name: <code>mcp__tuitab__tuitab_query</code> → <code>mcp__qrow__qrow_query</code>, <code>mcp__tuitab</code> → <code>mcp__qrow</code>. In a JSON config, rename the key and the command to <code>qrow</code>.</p>
+    <p>Add qrow as above, with <code>--mcp-write</code> if you had it. Permission rules follow the server's name: <code>mcp__tuitab__tuitab_query</code> → <code>mcp__qrow__qrow_query</code>, <code>mcp__tuitab</code> → <code>mcp__qrow</code>. In a JSON config, add a <code>qrow</code> entry with the command <code>qrow</code>.</p>
   </section>
 </main>
 

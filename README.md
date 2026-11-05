@@ -17,8 +17,8 @@ leaving the terminal.
 
 </div>
 
-> **qrow was called tuitab until 0.12.0.** Coming from it? See
-> [Coming from tuitab](#coming-from-tuitab).
+> **qrow continues [tuitab](https://github.com/denisotree/tuitab)**, which stays at 0.11.1.
+> Coming from it? See [Coming from tuitab](#coming-from-tuitab).
 
 ```sh
 qrow data.csv                   # open a file
@@ -385,45 +385,37 @@ for every command (column ops, clipboard, dedup, and more).
 
 ## Coming from tuitab
 
-qrow is tuitab under a new name, from version 0.12.0. The commands `tuitab`, `ttab`
-and `ttb` are now `qrow` and `qrw`; the MCP server is `qrow` and its tools are
-`qrow_inspect`, `qrow_query`, `qrow_describe`, `qrow_jq`, `qrow_calc`, `qrow_write` and
-`qrow_write_apply`. The old repository,
-[denisotree/tuitab](https://github.com/denisotree/tuitab), stays as the archive of
-0.11.1 and earlier.
+qrow 1.0.0 continues tuitab: the same engine, developed further under a new name. tuitab
+stays available at 0.11.1 on every channel and keeps working; it gets no further releases.
+The two install side by side — the commands differ (`tuitab`, `ttab`, `ttb` against `qrow`,
+`qrw`), and so do the MCP tools (`tuitab_*` against `qrow_*`). To move over, install qrow,
+then remove tuitab when you no longer need it.
 
-- **Cargo:** `cargo uninstall tuitab && cargo install qrow`.
-- **Homebrew:** the tap is renamed to `denisotree/qrow` and the formula to `qrow` on the
-  next `brew update`. Homebrew only upgrades from a tap you trust, so trust the renamed
-  one once, then upgrade:
-
-  ```sh
-  brew update && brew trust denisotree/qrow && brew upgrade
-  ```
-- **AUR:** install `qrow` or `qrow-bin`; pacman offers to replace `tuitab` or
-  `tuitab-bin`.
-- **APT:** the old repository stays at 0.11.1 and gets no updates. Remove it, add the
-  new one as in [Debian / Ubuntu (APT)](#debian--ubuntu-apt), and `apt install qrow`
-  removes `tuitab`:
+- **Cargo:** `cargo install qrow`, later `cargo uninstall tuitab`.
+- **Homebrew:** qrow has its own tap: `brew install denisotree/qrow/qrow`, later
+  `brew uninstall tuitab`.
+- **AUR:** install `qrow` or `qrow-bin`; remove `tuitab` or `tuitab-bin` when you want.
+- **APT:** add the qrow repository as in [Debian / Ubuntu (APT)](#debian--ubuntu-apt) and
+  `apt install qrow`. The tuitab repository can stay or go; to remove it:
 
   ```sh
+  sudo apt remove tuitab
   sudo rm /etc/apt/sources.list.d/tuitab.list /usr/share/keyrings/tuitab.gpg
   ```
-- **MCP in Claude Code:** register the server under its new name, keeping
-  `--mcp-write` if you had it:
+- **MCP in Claude Code:** register qrow, keeping `--mcp-write` if you had it, and drop the
+  tuitab server once you have switched:
 
   ```sh
-  claude mcp remove tuitab
   claude mcp add -s user qrow -- qrow --mcp
+  claude mcp remove tuitab
   ```
 
   Permission rules follow the server's name: a rule like `mcp__tuitab__tuitab_query`
   becomes `mcp__qrow__qrow_query`, and `mcp__tuitab` becomes `mcp__qrow`.
-- **MCP clients configured with JSON** (Claude Desktop, Cursor, Zed and others): rename
-  the key and the `command` to `qrow`, with the full path if you used one —
-  `/opt/homebrew/bin/qrow` after a Homebrew upgrade, since `/opt/homebrew/bin/tuitab` is
-  gone. The client derives tool names from the key: a key left as `tuitab` gives
-  `mcp__tuitab__qrow_*`.
+- **MCP clients configured with JSON** (Claude Desktop, Cursor, Zed and others): add a `qrow`
+  entry with `"command": "qrow"` — the full path if the client needs one, such as
+  `/opt/homebrew/bin/qrow`. The client derives tool names from the key: a key left as
+  `tuitab` gives `mcp__tuitab__qrow_*`.
 
 ## Documentation
 

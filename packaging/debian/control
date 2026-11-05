@@ -12,8 +12,6 @@ Rules-Requires-Root: no
 Package: qrow
 Architecture: any
 Depends: ${misc:Depends}, ${shlibs:Depends}
-Conflicts: tuitab
-Replaces: tuitab
 Description: Query rows in tables, documents and databases from the terminal
  qrow is a fast, keyboard-driven terminal viewer for tabular data, with an
  MCP server that lets AI assistants compute over the same files.
@@ -26,4 +24,4 @@ Description: Query rows in tables, documents and databases from the terminal
  column statistics, histograms and line/bar charts, transposing, and export.
  .
  The package provides two command names: qrow and its short alias qrw.
- It replaces tuitab, the same program under its former name.
+ It continues tuitab, which stays at 0.11.1; the two install side by side.

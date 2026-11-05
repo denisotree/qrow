@@ -10,9 +10,6 @@ arch=('x86_64' 'aarch64')
 url="https://github.com/denisotree/qrow"
 license=('Apache-2.0')
 depends=()
-# tuitab is the same program under its former name.
-conflicts=('tuitab')
-replaces=('tuitab')
 makedepends=('rust' 'cargo')
 source=("$pkgname-$pkgver.tar.gz::$url/archive/refs/tags/v$pkgver.tar.gz")
 sha256sums=('e739d90b9eda539010af549ba1bdb50b9d329712fc3aec519304b7d9119a2418')

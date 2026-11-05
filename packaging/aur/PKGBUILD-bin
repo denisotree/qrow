@@ -11,9 +11,7 @@ url="https://github.com/denisotree/qrow"
 license=('Apache-2.0')
 depends=()
 provides=('qrow')
-# tuitab-bin and tuitab are the same program under its former name.
-conflicts=('qrow' 'tuitab' 'tuitab-bin')
-replaces=('tuitab-bin')
+conflicts=('qrow')
 
 _base_url="https://github.com/denisotree/qrow/releases/download/v${pkgver}"
 

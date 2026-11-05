@@ -2,7 +2,7 @@
 #
 # Lives at Formula/qrow.rb in the tap repository
 #   https://github.com/denisotree/homebrew-qrow
-# next to formula_renames.json, which moves existing tuitab installs to qrow.
+# (tuitab keeps its own tap, denisotree/homebrew-tuitab, at 0.11.1).
 #
 # Users install via:
 #   brew tap denisotree/qrow
