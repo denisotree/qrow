@@ -15,7 +15,7 @@ conflicts=('tuitab')
 replaces=('tuitab')
 makedepends=('rust' 'cargo')
 source=("$pkgname-$pkgver.tar.gz::$url/archive/refs/tags/v$pkgver.tar.gz")
-sha256sums=('SKIP')
+sha256sums=('e739d90b9eda539010af549ba1bdb50b9d329712fc3aec519304b7d9119a2418')
 
 prepare() {
     cd "$pkgname-$pkgver"
