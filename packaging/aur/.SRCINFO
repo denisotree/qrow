@@ -9,6 +9,6 @@ pkgbase = qrow
 	makedepends = rust
 	makedepends = cargo
 	source = qrow-1.1.0.tar.gz::https://github.com/denisotree/qrow/archive/refs/tags/v1.1.0.tar.gz
-	sha256sums = SKIP
+	sha256sums = 0ebe6639e000fcb64d8356fbee846668b16e89e059e664ef24fbaa9dbca8e12e
 
 pkgname = qrow
