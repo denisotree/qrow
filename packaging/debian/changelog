@@ -1,3 +1,9 @@
+qrow (0.12.0-1) unstable; urgency=low
+
+  * Release 0.12.0. tuitab is now qrow.
+
+ -- denisotree <denisotree@users.noreply.github.com>  Thu, 05 Nov 2026 00:14:38 +0000
+
 tuitab (0.11.1-1) unstable; urgency=low
 
   * Release 0.11.1.

@@ -3,7 +3,7 @@
 # AUR page: https://aur.archlinux.org/packages/qrow-bin
 
 pkgname=qrow-bin
-pkgver=0.11.1
+pkgver=0.12.0
 pkgrel=1
 pkgdesc="Query rows in tables, documents and databases from the terminal (pre-built binary)"
 arch=('x86_64' 'aarch64')
