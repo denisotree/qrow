@@ -55,7 +55,7 @@ calamine = { version = "0.38", features = ["chrono"] }
 glob = "0.3"
 rusqlite = { version = "0.40", features = ["bundled"] }
 duckdb = { version = "1" }
-rust_xlsxwriter = "0.101"
+rust_xlsxwriter = "0.102"
 serde_json = { version = "1", features = ["preserve_order"] }
 rayon = "1"
 rand = "0.10"
