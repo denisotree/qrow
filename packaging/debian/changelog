@@ -1,3 +1,9 @@
+qrow (1.1.0-1) unstable; urgency=low
+
+  * Release 1.1.0.
+
+ -- denisotree <denisotree@users.noreply.github.com>  Thu, 05 Nov 2026 15:33:54 +0000
+
 qrow (1.0.0-1) unstable; urgency=low
 
   * Release 1.0.0, the first release of qrow, which continues tuitab.

@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.0] - 2026-11-05
+
 ### Changed
 
 - Polars 0.53 → 0.55. Along the way: rusqlite 0.41, crossterm 0.29, rust_xlsxwriter 0.102,
@@ -1530,7 +1532,8 @@ versions follow 1.{update}.{patch}: a feature update raises the middle number, a
 - Non-English keyboard remapping
 - Three binary aliases: `tuitab`, `ttab`, `tt`
 
-[Unreleased]: https://github.com/denisotree/qrow/compare/v1.0.0...HEAD
+[Unreleased]: https://github.com/denisotree/qrow/compare/v1.1.0...HEAD
+[1.1.0]: https://github.com/denisotree/qrow/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/denisotree/qrow/compare/v0.11.1...v1.0.0
 [0.11.1]: https://github.com/denisotree/tuitab/compare/v0.11.0...v0.11.1
 [0.11.0]: https://github.com/denisotree/tuitab/compare/v0.10.3...v0.11.0
