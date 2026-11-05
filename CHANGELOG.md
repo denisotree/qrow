@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- The API documentation on docs.rs builds. 1.1.0's docs build still failed: without the
+  bundled DuckDB, the DuckDB crate's build script downloaded a pre-built library, and
+  docs.rs builds without network. The download is now off.
+- A `--no-default-features` build links the system DuckDB, as the README says. It used to
+  download a pre-built libduckdb instead, before looking for the installed one.
+
 ## [1.1.0] - 2026-11-05
 
 ### Changed
